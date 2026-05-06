@@ -1,0 +1,174 @@
+# Agent Skill Control Theory - Skill IR
+# Use this internal representation before writing SKILL.md.
+# 中文提示：这是写 SKILL.md 前的内部设计稿，不是最终输出格式。
+
+identity:
+  name: ""
+  one_sentence: ""
+  user_facing_alias: ""
+  intended_platforms:
+    - "Claude Code"
+    - "Codex"
+    - "Other"
+
+status:
+  maturity: "draft | experimental | usable | production | deprecated"
+  owner: ""
+  last_reviewed: ""
+
+worthiness:
+  task_distribution: ""
+  repetition: "low | medium | high"
+  stable_job_to_be_done: ""
+  evaluability: "low | medium | high"
+  domain_substance: "low | medium | high"
+  safety_budget: "low | medium | high"
+  verdict: "create | checklist | direct-answer | reject"
+
+failure_map:
+  activation_failures:
+    - ""
+  intent_failures:
+    - ""
+  state_failures:
+    - ""
+  trajectory_failures:
+    - ""
+  execution_failures:
+    - ""
+  completion_failures:
+    - ""
+  evolution_failures:
+    - ""
+
+control_surfaces:
+  activation:
+    required: true
+    mechanism: "description, not-for, near-miss evals"
+  intent:
+    required: false
+    mechanism: "mode routing, clarification gates"
+  state:
+    required: false
+    mechanism: "source hierarchy, repo/docs/tool evidence"
+  trajectory:
+    required: false
+    mechanism: "workflow, hard gates, stop conditions"
+  execution:
+    required: false
+    mechanism: "scripts, validators, dry-runs"
+  completion:
+    required: false
+    mechanism: "validation, proof fields, limitations"
+  evolution:
+    required: false
+    mechanism: "trigger/output/safety evals, patch hypotheses"
+
+activation_contract:
+  use_when:
+    - ""
+  implicit_triggers:
+    - ""
+  not_for:
+    - ""
+  near_miss:
+    - ""
+  adjacent_skills:
+    - name: ""
+      prefer_when: ""
+
+runtime_contract:
+  modes:
+    - name: "quick"
+      use_when: ""
+    - name: "standard"
+      use_when: ""
+    - name: "deep"
+      use_when: ""
+    - name: "clarification"
+      use_when: ""
+    - name: "safety_redirect"
+      use_when: ""
+  required_inputs:
+    - ""
+  hard_gates:
+    - ""
+  stop_conditions:
+    - ""
+  workflow:
+    - ""
+  fallback_paths:
+    - ""
+
+state_policy:
+  source_of_truth:
+    - ""
+  source_hierarchy:
+    - "direct tool output"
+    - "current files or diff"
+    - "official docs"
+    - "user statement"
+    - "inference"
+  freshness_policy: ""
+  uncertainty_policy: ""
+
+execution_policy:
+  scripts_needed:
+    - name: ""
+      purpose: ""
+      input: ""
+      output: ""
+  external_actions:
+    allowed: false
+    approval_required: true
+    dry_run_required: true
+
+completion_contract:
+  final_output_fields:
+    - "summary"
+    - "evidence"
+    - "validation"
+    - "known limitations"
+  proof_required:
+    - ""
+  unsupported_claims_forbidden:
+    - ""
+
+resources:
+  references:
+    - path: "references/example.md"
+      load_when: ""
+  scripts:
+    - path: "scripts/example.py"
+      run_when: ""
+  assets:
+    - path: "assets/example"
+      use_when: ""
+
+eval_plan:
+  trigger_cases:
+    positive:
+      - ""
+    negative:
+      - ""
+    near_miss:
+      - ""
+  output_cases:
+    happy_path:
+      - ""
+    edge_case:
+      - ""
+    historical_failure:
+      - ""
+  safety_cases:
+    - ""
+  baseline_comparison: "none | old-skill | no-skill | both"
+
+patch_hypothesis:
+  target_failure: ""
+  proposed_change: ""
+  expected_benefit: ""
+  expected_cost: ""
+  evals_to_update:
+    - ""
+  rollback_condition: ""
