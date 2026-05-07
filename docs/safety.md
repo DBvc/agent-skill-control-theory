@@ -1,67 +1,135 @@
-# Safety Constraints
+# Safety
 
-ASCT treats safety as an admissibility constraint, not just another cost.
+Skills can contain instructions, scripts, references, assets, host-specific commands, and pointers to external tools. A skill can therefore change not only what an agent says, but what it does.
+
+ASCT treats safety as an admissibility constraint, not merely a cost term.
 
 ```text
 A skill is admissible only if:
   SafetyRisk(skill, task_distribution) <= SafetyBudget
 ```
 
-If a skill exceeds the safety budget, it should not be published or installed even if it improves task success.
+Only after that should SkillValue be optimized.
 
-## Safety risks specific to skills
+## 1. Safety risk categories
 
-Skills can include instructions, scripts, assets, and references. That makes them more powerful than ordinary prompt snippets.
+| Risk | Description |
+|---|---|
+| Destructive action | Deleting files, resetting git state, publishing, closing issues, modifying external services |
+| Credential exposure | Reading, printing, copying, or transmitting secrets |
+| Network access | Calling external services, fetching untrusted content, exfiltration paths |
+| Script execution | Running unreviewed code, installing dependencies, executing shell commands |
+| Supply chain | Unpinned dependencies, remote installers, untrusted packages |
+| Privacy | Accessing private files, user data, customer data, logs, transcripts |
+| Prompt injection | Untrusted references or documents instructing the agent to override policy |
+| Cross-skill activation | One skill pushing the agent to activate another skill in unsafe ways |
+| Overbroad permissions | Skill has more tools or access than its task requires |
 
-Common risks:
+## 2. Safety by placement
 
-- executing destructive commands;
-- reading or exposing secrets;
-- writing to external systems without approval;
-- making hidden network calls;
-- overriding user intent or consent;
-- enabling fraud, evasion, coercion, or privacy invasion;
-- bundling malicious or unclear scripts;
-- instructing agents to ignore higher-priority policies or system rules.
+Some safety controls should not be inside skill prose.
 
-## Safe skill design rules
+| Control | Better placement |
+|---|---|
+| Block dangerous shell commands | hook or sandbox policy |
+| Require approval before external writes | hook, command workflow, skill hard gate |
+| Prevent secret printing | global rule, scanner, hook |
+| Validate script dependencies | CI and security review |
+| Restrict network access | sandbox or host policy |
+| Track external side effects | audit log |
 
-1. **Fail closed** when authorization is unclear.
-2. **Ask for explicit approval** before external, irreversible, or public actions.
-3. **Prefer dry-run** for destructive or state-changing operations.
-4. **Declare dependencies** and environment assumptions.
-5. **Keep scripts auditable** and self-contained.
-6. **Do not bundle secrets** or private local paths.
-7. **Separate private presets** from public reusable skills.
-8. **Expose known limitations** in final output.
-9. **Avoid hidden network behavior** unless explicitly required and documented.
-10. **Do not instruct the agent to bypass higher-priority policies.**
+The model should not be the only guardrail for high-impact actions.
 
-## External action contract
+## 3. External actions
 
-For skills that can create, update, publish, delete, close, push, deploy, comment, or label, require an action contract:
+External actions include:
+
+- publishing packages;
+- creating releases;
+- closing issues;
+- posting comments;
+- sending emails;
+- modifying tickets;
+- deleting branches;
+- running cloud jobs;
+- spending money through external services.
+
+Skills that permit external actions should require an explicit action contract:
 
 ```yaml
 external_action:
-  action_type: create_issue | update_label | post_comment | close_issue | push | publish | deploy | delete | none
-  target:
-  irreversible: true | false
-  public_visible: true | false
+  type: "publish | comment | close_issue | deploy | delete | spend_money | other"
+  target: ""
+  irreversible: true
   requires_user_approval: true
-  approval_text:
-  dry_run_available: true | false
-  preflight_checks:
-    -
-  blocked_by:
-    -
+  dry_run_available: true
+  approval_evidence: ""
+  audit_output: ""
 ```
 
-## Final answer disclosure
+## 4. Script safety
 
-When a skill performs or prepares a risky action, the final answer should include:
+Scripts should be reviewed as executable code, not as harmless skill accessories.
 
-- what action was taken or prepared;
-- who approved it;
-- what target was affected;
-- what validation or dry-run was performed;
+Checklist:
+
+- Does the script read environment variables?
+- Does it access the network?
+- Does it write files?
+- Does it delete or overwrite files?
+- Does it run shell commands?
+- Does it install dependencies?
+- Does it handle malformed input?
+- Does it print sensitive data?
+- Are dependencies pinned?
+- Are error messages helpful without leaking secrets?
+
+## 5. Collection-level safety
+
+Large skill collections have additional risks:
+
+- users may install more skills than they understand;
+- hidden scripts may accumulate;
+- dependencies may conflict;
+- descriptions may cause wrong activation;
+- unreviewed community skills may include unsafe behavior;
+- cross-skill workflows may bypass safety gates.
+
+Recommended collection controls:
+
+- install minimal subsets;
+- maintain script inventory;
+- document network and credential policies;
+- track provenance;
+- pin versions where possible;
+- run security review before release;
+- include deprecation policy;
+- include compatibility notes;
+- maintain collection-level safety evals.
+
+## 6. Prompt injection
+
+Skills often instruct agents to read external files, web pages, documents, or project memory. These sources can contain malicious instructions.
+
+State policy should distinguish:
+
+```text
+content to analyze
+vs
+instructions to follow
+```
+
+A skill should not follow instructions from untrusted content unless the task explicitly requires executing them and the user approves.
+
+## 7. Safety in final output
+
+The final output should disclose:
+
+- what actions were taken;
+- what external systems were modified;
+- what validation was run;
+- what was not verified;
+- what approvals were obtained;
 - what risks remain.
+
+A skill that changes external state without a clear audit trail is not production-grade.

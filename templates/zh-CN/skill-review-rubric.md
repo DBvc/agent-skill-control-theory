@@ -1,45 +1,40 @@
 # Skill 评审 Rubric
 
-每项 1 到 5 分。
+每个维度 1 到 5 分。
 
-| 分数 | 含义 |
-|---|---|
-| 1 | 缺失或有害 |
-| 2 | 存在但薄弱 |
-| 3 | 可用但不完整 |
-| 4 | 强 |
-| 5 | 生产级 |
+| 维度 | 1 | 3 | 5 | 分数 |
+|---|---|---|---|---:|
+| 任务分布 | 模糊或一次性 | 有一定重复 | 清晰重复任务分布 |  |
+| 创建价值 | prompt 就够 | 混合 | 明确值得 skill 化 |  |
+| 激活 | 宽泛不清 | 有部分边界 | use/not-for/near-miss 很强 |  |
+| 意图控制 | 无模式 | 有一些路由 | 最小充分模式清楚 |  |
+| 状态控制 | 依赖记忆 | 有一些证据 | source hierarchy 清楚 |  |
+| 轨迹控制 | 只有建议 | 基本步骤 | gates、stops、fallback、handoff |  |
+| 执行控制 | 让模型做确定性工作 | 部分工具 | 确定性工作已外包 |  |
+| 完成控制 | 无证明声明完成 | 有部分验证 | claims 映射到 evidence |  |
+| 上下文经济 | 臃肿 | 中等 | 主文件精简，references 拆分 |  |
+| 安全 | 隐式 | 有部分 gates | 明确 safety budget 和 action contracts |  |
+| 演化 | 无 eval | 有示例 | trigger/output/process/safety/regression evals |  |
+| 放置 | 全塞 skill | 有部分拆分 | 控制放到最低成本位置 |  |
 
-## Rubric
+## 总结
 
-| 维度 | 分数 | 备注 |
-|---|---:|---|
-| Skill-worthiness：重复、稳定、可评估的任务分布 | | |
-| Activation Control：清楚的 description、use/not-for/near-miss | | |
-| Intent Control：modes、input contract、non-goals | | |
-| State Control：source of truth、evidence hierarchy、freshness policy | | |
-| Trajectory Control：workflow、hard gates、stops、fallback | | |
-| Execution Control：确定性工作是否交给工具/scripts | | |
-| Completion Control：validation、proof fields、limitations | | |
-| Evolution Control：evals、regression、patch hypothesis | | |
-| Context Economy：主 SKILL.md 是否最小充分 | | |
-| Safety：fail-closed、approval、无隐藏风险行为 | | |
+优势：
 
-## 总体评级
+- 
 
-- 45-50：生产级 skill
-- 38-44：强可复用 skill
-- 30-37：可用，但需要补 eval/resources
-- 20-29：更像 prompt checklist
-- <20：不应作为 full skill 发布
+主要风险：
 
-## 评审问题
+- 
 
-1. 这个 skill 减少了哪种失败模式？
-2. 它引入了什么新成本？
-3. 它引入了什么新风险？
-4. 什么证据证明它比 baseline 更好？
-5. 哪些内容应该移出 `SKILL.md`？
-6. 哪些确定性工作应该脚本化？
-7. 哪些 claim 必须在验证前禁止？
-8. 哪个历史失败应该成为 eval？
+最高杠杆改进：
+
+```text
+
+```
+
+建议成熟度：
+
+```text
+draft | experimental | usable | production | deprecated
+```

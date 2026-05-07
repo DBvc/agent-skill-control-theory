@@ -1,79 +1,61 @@
 # Patch Hypothesis
 
-Use this for skill changes that affect trigger boundary, workflow, evidence policy, output contract, tools, or safety behavior.
+## Skill
 
-## Change summary
+Name:
 
-**Skill:**
+Version before:
 
-**Current version / commit:**
-
-**Proposed change:**
+Version after:
 
 ## Target failure
 
-What failure does this patch reduce?
-
-- [ ] Wrong trigger
-- [ ] Missed trigger
-- [ ] Intent confusion
-- [ ] State hallucination
-- [ ] Bad trajectory
-- [ ] Fragile execution
-- [ ] Unsupported completion claim
-- [ ] Safety overreach
-- [ ] Context bloat
-- [ ] Maintenance drift
-- [ ] Other:
-
-## Hypothesis
-
-If we change:
+Which failure mode does this patch address?
 
 ```text
-<change>
+
 ```
 
-Then:
+## Proposed change
 
 ```text
-<expected behavior improvement>
+
 ```
 
-Because:
+## Expected benefit
 
 ```text
-<mechanism>
+
 ```
 
 ## Expected cost
 
-- Context cost:
-- User friction:
-- Runtime/tool cost:
-- Maintenance cost:
-- New risk:
+Context cost:
 
-## Evals to update
+User friction:
 
-- [ ] Trigger evals
-- [ ] Near-miss evals
-- [ ] Output evals
-- [ ] Safety evals
-- [ ] Historical regression cases
+Tool/runtime cost:
+
+Maintenance cost:
+
+Safety risk:
+
+## Evals updated
+
+- 
 
 ## Rollback condition
 
 Rollback if:
 
 ```text
-<condition>
+
 ```
 
 ## Review result
 
-- [ ] Accept
-- [ ] Revise
-- [ ] Reject
+Accepted:
+
+Rejected:
 
 Notes:

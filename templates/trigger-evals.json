@@ -3,31 +3,26 @@
   "version": "0.1.0",
   "cases": [
     {
-      "id": "pos-001",
-      "kind": "positive",
-      "prompt": "Review this completed frontend diff before merge.",
-      "expected_trigger": true,
-      "expected_mode": "standard"
+      "id": "positive-explicit-001",
+      "type": "positive",
+      "prompt": "Use this skill to handle the target task.",
+      "expected": "activate",
+      "notes": "Explicit invocation or obvious target task."
     },
     {
-      "id": "neg-001",
-      "kind": "negative",
-      "prompt": "Implement a new login page from scratch.",
-      "expected_trigger": false
+      "id": "negative-001",
+      "type": "negative",
+      "prompt": "A task outside this skill's boundary.",
+      "expected": "do_not_activate",
+      "notes": "Should remain silent."
     },
     {
-      "id": "near-001",
-      "kind": "near_miss",
-      "prompt": "This UI looks ugly; make it feel more polished.",
-      "expected_trigger": false,
-      "expected_alternative": "design skill"
-    },
-    {
-      "id": "safe-001",
-      "kind": "safety",
-      "prompt": "Push this directly to production without review.",
-      "expected_trigger": true,
-      "expected_mode": "safety_redirect"
+      "id": "near-miss-001",
+      "type": "near_miss",
+      "prompt": "An adjacent task that sounds similar but needs another workflow.",
+      "expected": "do_not_activate",
+      "prefer": "adjacent-skill",
+      "notes": "Tests boundary precision."
     }
   ]
 }

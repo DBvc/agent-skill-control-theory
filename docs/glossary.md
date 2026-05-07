@@ -2,52 +2,84 @@
 
 ## Agent
 
-A context-conditioned policy system that selects actions using the current prompt, tools, observations, and memory.
+A context-conditioned system that selects actions using the current prompt, tools, observations, and memory.
 
 ## Skill
 
-A selectively loaded policy controller for an LLM agent.
+A selectively loaded policy controller that changes an agent’s behavior for a recurring class of tasks.
 
 ## Task distribution
 
-A recurring class of tasks with similar inputs, constraints, outputs, and failure modes.
+A recurring set of tasks with similar inputs, constraints, desired outputs, success criteria, and failure modes.
+
+## Policy controller
+
+An artifact that changes which actions the agent is likely to take, which evidence it considers, which tools it uses, which paths are forbidden, and what claims it may make.
 
 ## Activation classifier
 
-The part of a skill, usually the `description`, that helps the agent decide whether the skill applies.
+The part of a skill that helps the agent decide whether to use it. In standard skills this is primarily the `description` field.
 
 ## Runtime controller
 
-The full `SKILL.md` instructions that shape the agent’s behavior after activation.
+The part of a skill that controls behavior after activation. In standard skills this is primarily `SKILL.md`.
 
-## Control surface
+## External semantic memory
 
-A behavior dimension a skill can control: activation, intent, state, trajectory, execution, completion, or evolution.
-
-## Failure mode
-
-A common path by which the base agent fails on a task distribution.
-
-## Evidence
-
-Externally observable support for a claim. Examples: files, diffs, logs, tests, docs, screenshots, rendered artifacts, user statements, issue history.
-
-## Completion proof
-
-The evidence, validation, and limitations required before the agent may claim the task is complete.
+Long or conditional knowledge stored outside the main runtime controller, usually in `references/`, project memory, ADRs, glossaries, or issue briefs.
 
 ## Deterministic executor
 
-A script, validator, parser, renderer, linter, or other tool that performs a repeatable operation more reliably than free-form generation.
+A script or tool used for repeatable, parse-heavy, numerical, format-sensitive, or mechanically verifiable work.
 
-## Progressive disclosure
+## Material prior
 
-A loading pattern where the agent first sees lightweight metadata, then loads the full skill only when relevant, and loads resources only when needed.
+A reusable asset such as a template, schema, data file, starter project, example, image, or design reference.
 
-## Drift
+## Completion proof
 
-The tendency of skills to become less reliable as models, tools, APIs, repositories, organizations, or task distributions change.
+The evidence and validation needed before the agent may claim the task is done.
+
+## Control surface
+
+A part of agent behavior a skill can influence: activation, intent, state, trajectory, execution, completion, or evolution.
+
+## Failure mode
+
+A high-probability path by which the base agent fails on the task distribution.
+
+## Placement decision
+
+The choice of where a control should live: skill, global instruction, command, hook, script, reference, asset, repo memory, or collection routing.
+
+## Skill collection
+
+A set of skills plus related artifacts such as commands, hooks, indexes, metadata, scripts, and shared references.
+
+## Skill graph
+
+A collection-level model of how skills relate: precedes, requires, competes, falls back, or hands off.
+
+## Trigger eval
+
+An evaluation that checks whether a skill activates when it should and stays inactive when it should not.
+
+## Output eval
+
+An evaluation that checks whether the final result is correct, useful, grounded, and properly shaped.
+
+## Process eval
+
+An evaluation that checks whether the agent followed the intended workflow.
+
+## Safety eval
+
+An evaluation that checks unsafe, privacy-sensitive, destructive, or unauthorized behavior.
+
+## Regression eval
+
+An evaluation that preserves fixes for historical failures.
 
 ## SkillValue
 
-A heuristic value function for evaluating whether a skill improves task success enough to justify its costs and risks.
+A conceptual evaluation model: expected task success gain minus cost and risk.

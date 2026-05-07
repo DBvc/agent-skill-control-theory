@@ -1,281 +1,203 @@
 # Agent 技能控制论
 
-Agent Skill Control Theory（ASCT，Agent 技能控制论）是一套用于设计和评估 LLM agent skills 的第一性原理框架。
+Agent Skill Control Theory，简称 ASCT，是一套用于设计和评估 LLM agent skills 的第一性原理框架。
 
-它不是泛泛讨论所有 agent 架构，而是聚焦 **skills**：使用 `SKILL.md`、metadata、references、scripts、assets 和 progressive disclosure 的文件系统型能力包。
+它刻意比完整 agent 架构窄。它聚焦的是 skill：一种围绕 `SKILL.md`、metadata、references、scripts、assets 和 progressive disclosure 构建的可移植行为包。
 
-## 1. 为什么需要一套理论
+## 1. 中心命题
 
-很多 skill 仓库一开始只是有用 prompt 的集合。短期可用，但容易出现三个问题：
-
-1. **被案例牵着走**：每遇到一个失败就加一条规则。
-2. **上下文膨胀**：主 skill 文件变成装满所有顾虑的行李箱。
-3. **无法测量的自信**：作者觉得更完整就是更好。
-
-ASCT 不从现有 skill 样本出发，而是从 agent 的运行方式出发。
-
-一个 LLM agent 可以抽象成：
-
-```text
-Agent = π(action | context, tools, observations, memory)
-```
-
-Agent 会在当前上下文、工具、观测和记忆条件下选择动作。Skill 之所以有效，是因为它改变了这些条件。
-
-## 2. 核心定义
+ASCT 的中心命题是：
 
 ```text
 Skill = 一个选择性加载的 LLM agent 策略控制器。
 ```
 
-Skill 不只是知识包。它是在某类任务上被激活的控制层，用来改变 agent 的动作分布。
+这句话的每个词都有含义：
 
-常见 skill 结构可以映射到控制功能：
+- **Skill**：用于一类重复任务的可复用行为包。
+- **选择性加载**：它不是始终生效，而是通过显式调用、隐式匹配或宿主路由被选中。
+- **策略控制器**：它改变 agent 的动作分布，让某些路径更可能、某些路径更不可能、某些路径被禁止。
+- **LLM agent**：目标不是静态文本生成器，而是可以读文件、调工具、执行代码、检查结果、修改环境的 agent。
 
-| 构件 | 控制功能 |
+因此，skill 不是 prompt。prompt 请求一次回答；skill 控制一种可重复的 agent 行为模式。
+
+## 2. 为什么 prompt collection 不够
+
+prompt collection 可以局部改善回答，但 skill system 必须处理更复杂的问题：
+
+1. **激活**：agent 要知道什么时候用这个 skill，什么时候不用。
+2. **歧义**：agent 要把模糊用户请求编译成任务框架。
+3. **状态**：agent 要 grounding 到当前代码库、文档、工具和环境。
+4. **轨迹**：agent 要避免看似合理但错误的下一步。
+5. **执行**：agent 要把确定性工作交给工具。
+6. **完成**：agent 不能在没有证据时声称完成。
+7. **演化**：skill 要随着模型、工具、API 和工作流变化而维护。
+
+prompt collection 主要包含建议。skill system 包含控制。
+
+## 3. 最小 agent 模型
+
+ASCT 把 LLM agent 建模为：
+
+```text
+Agent = π(action | context, tools, observations, memory)
+```
+
+agent 在上下文、工具、观测和记忆影响下选择动作。skill 改变这些条件。
+
+```text
+Base agent:
+  π0(action | C)
+
+Skill-activated agent:
+  πs(action | C + I_s + R_s + T_s + V_s)
+```
+
+其中：
+
+- `I_s`：运行时指令，通常是 `SKILL.md`。
+- `R_s`：references、assets、project memory 或其他外部上下文。
+- `T_s`：skill 让 agent 注意到的工具或脚本。
+- `V_s`：验证和完成规则。
+
+skill 不替代 agent。skill 塑形 agent。
+
+## 4. 标准 skill 结构为什么重要
+
+公开 Agent Skills 格式把 skill 定义为至少包含 `SKILL.md` 的目录，`SKILL.md` 包含 YAML frontmatter 和 Markdown body。可选目录包括 `scripts/`、`references/` 和 `assets/`。
+
+ASCT 把这些文件解释为控制功能：
+
+| Artifact | 控制功能 |
 |---|---|
 | `description` | 激活分类器 |
 | `SKILL.md` | 运行时控制器 |
 | `references/` | 外部语义记忆 |
 | `scripts/` | 确定性执行器 |
-| `assets/` | 素材先验 |
+| `assets/` | 可复用素材先验 |
 | `evals/` | 控制器回归测试 |
 
-这种映射不是文风问题，而是来自 progressive disclosure：metadata 常驻，完整 `SKILL.md` 触发后才加载，其它文件按需读取或执行。
+这个映射来自 progressive disclosure。metadata 在激活前可见，完整 `SKILL.md` 只在激活后加载，references/scripts/assets 按需使用。
 
-## 3. 定义
+## 5. 五条基础假设
 
-### Agent
+ASCT 建立在五条基础假设上：
 
-基于上下文、工具、观测和记忆选择动作的策略系统。
+1. **条件策略**：agent 行为会受上下文、指令、工具、观测和资源影响。
+2. **资源有界**：上下文、注意力、工具调用、时间、用户耐心、金钱成本和安全预算有限。
+3. **非零错误率**：agent 在触发、意图推断、状态 grounding、轨迹选择、执行和完成声明上都有非零错误率。
+4. **外部可证据化**：许多任务事实和确定性操作可以由外部证据和工具更可靠地处理。
+5. **漂移**：模型、工具、API、代码库、组织、任务分布和用户习惯都会变化。
 
-### Skill
+## 6. 七个控制面
 
-选择性加载的策略控制器，用来改变 agent 在某类任务中的行为。
+### 6.1 激活控制
 
-### Task distribution
+问题：**这个 skill 是否该使用？**
 
-一组重复出现、输入、约束、期望输出和失败模式相似的任务。
+机制包括 `name`、`description`、显式命令、not-for 边界、相邻 skill 路由、生成索引和 trigger evals。
 
-### Failure mode
+错误激活会让好 skill 变成坏控制。
 
-没有该 skill 时，base agent 在该任务分布中高概率出现的失败路径。
+### 6.2 意图控制
 
-### Control surface
+问题：**用户真正要完成什么任务？**
 
-Skill 可以影响的行为面：激活、意图、状态、轨迹、执行、完成或演化。
+用户说“帮我看看”，可能是 review、debug、design、release check、rewrite 或 decision support。skill 要把自然语言编译成任务框架和运行模式。
 
-### Evidence
+### 6.3 状态控制
 
-支持某个声明的外部可观察信息，例如文件内容、diff、日志、官方文档、命令输出、测试结果、截图、渲染产物、用户声明或项目记忆。
+问题：**当前真实情况是什么？**
 
-### Completion proof
+状态控制防止 agent 依赖过期记忆或想象事实。它使用当前文件、diff、日志、官方文档、测试输出、截图、渲染产物、issue 历史、ADR、术语表和项目记忆。
 
-Agent 声称任务完成前所需的证据和验证。
+### 6.4 轨迹控制
 
-## 4. 五条基础假设
+问题：**agent 应该沿什么路径行动？**
 
-### P1. 条件策略
+workflow 不是仪式，而是减少坏路径概率的约束层。好的轨迹控制包含 hard gates、stop conditions、fallback、escalation 和 handoff。
 
-Agent 行为会被上下文、指令、工具、观测和资源改变。
-
-如果这条不成立，skill 就不可能有效。Skill 有用，是因为 agent 的策略可以被条件化。
-
-### P2. 资源有界
-
-上下文、注意力、工具调用、执行时间、用户耐心和安全预算都是有限资源。
-
-所以正确的 skill 不是最长的 skill，而是最小充分控制器。
-
-### P3. 非零错误率
-
-Agent 在激活、意图推断、状态落地、轨迹选择、执行和完成声明上都有非零错误率。
-
-所以 skill 应该从失败模式出发设计。
-
-### P4. 外部可证据化
-
-许多任务相关事实和确定性操作，可以通过外部证据和工具比模型生成更可靠地处理。
-
-所以成熟 skill 会把事实从模型潜在记忆中移出来，把确定性工作从自由文本生成中移出来。
-
-### P5. 漂移
-
-模型、工具、API、代码库、组织和任务分布都会随时间变化。
-
-所以 skill 不是静态文档，而是会漂移的控制器，需要评估和回归。
-
-## 5. 七个控制面
-
-### 5.1 Activation Control
-
-问题：**该不该使用这个 skill？**
-
-机制：
-
-- `name`
-- `description`
-- 显式调用名
-- not-for 边界
-- 相邻 skill 路由
-- trigger evals
-
-坏的激活分类器会让好的运行时控制器变成干扰。
-
-### 5.2 Intent Control
-
-问题：**用户真正要的任务是什么？**
-
-机制：
-
-- mode routing
-- input contract
-- clarification gates
-- non-goals
-- task frame selection
-
-用户话语经常含糊。Skill 要把它们编译成任务框架。
-
-### 5.3 State Control
-
-问题：**当前真实状态是什么？**
-
-机制：
-
-- 读取文件
-- 检查 diff
-- 官方文档
-- 日志和命令输出
-- 渲染截图
-- 项目记忆，例如 glossary、ADR、issue history
-
-State control 防止 agent 基于过期或想象的事实行动。
-
-### 5.4 Trajectory Control
-
-问题：**agent 应该走什么行动路径？**
-
-机制：
-
-- workflow
-- hard gates
-- stop conditions
-- fallback paths
-- escalation rules
-- handoff rules
-
-Workflow 不是仪式，而是对坏行动路径的约束。
-
-### 5.5 Execution Control
+### 6.5 执行控制
 
 问题：**哪些操作需要确定性工具？**
 
-机制：
+核心区分：
 
-- scripts
-- validators
-- renderers
-- linters
-- schema checks
-- dry-run commands
-- dangerous action guards
+```text
+模型负责判断，工具负责确定性执行。
+```
 
-模型负责判断，确定性工具负责执行。
+### 6.6 完成控制
 
-### 5.6 Completion Control
+问题：**agent 什么时候可以声称完成？**
 
-问题：**什么时候可以声称 done？**
+完成控制用于抑制完成幻觉，要求 proof fields、validation results、claim-evidence mapping、confidence、known limitations 和 unverified-work disclosure。
 
-机制：
-
-- validation commands
-- proof fields
-- claim-evidence mapping
-- confidence levels
-- known limitations
-- unverified work disclosure
-
-Skill 应该压制“完成幻觉”。
-
-### 5.7 Evolution Control
-
-问题：**skill 如何避免漂移和回归？**
-
-机制：
-
-- trigger evals
-- output evals
-- safety evals
-- versioning
-- patch hypotheses
-- regression suites
-- compatibility notes
-
-没有评估的 skill 只是作者信念，不是工程资产。
-
-## 6. 设计定律
-
-### Law 1：触发边界定律
-
-Skill 的第一质量是正确激活。
-
-错误激活会直接产生伤害：浪费上下文、套错 workflow、增加摩擦，甚至触发不安全动作。
-
-### Law 2：任务编译定律
-
-Skill 把用户原话编译成任务框架和运行模式。
-
-用户说“帮我看看”，skill 要判断这到底是 review、debug、design、release check、rewrite 还是 decision support。
-
-### Law 3：上下文经济定律
-
-`SKILL.md` 里的每个 token 都应该买到行为改变。
-
-长理论、详尽案例和领域参考应该放进 `references/`，除非每次激活都需要它们。
-
-### Law 4：证据外部化定律
-
-当前事实应该来自外部证据，而不是模型潜在记忆。
-
-代码库状态、官方 API、diff、渲染产物、命令输出和用户文档应优先于模型记忆。
-
-### Law 5：轨迹约束定律
-
-Workflow 的作用是让坏路径更难发生。
-
-“请谨慎”很弱。“改代码前必须先建立可复现 pass/fail 信号”很强。
-
-### Law 6：自由度风险定律
-
-风险越高的任务，agent 自由度越应降低。
-
-创意任务需要空间。破坏性动作、发布操作、格式敏感产物和安全敏感任务需要 gates、dry-run 和验证。
-
-### Law 7：确定性外包定律
-
-模型做判断，工具做确定性执行。
-
-如果同样输入应该得到同样输出，优先使用脚本、验证器、解析器或渲染器。
-
-### Law 8：完成证明定律
-
-Done = output + evidence + validation + limitations。
+核心约束：
 
 ```text
 final_claims ⊆ validated_evidence
 ```
 
-如果没有运行验证，最终输出必须明确说明。
+### 6.7 演化控制
 
-### Law 9：漂移回归定律
+问题：**skill 如何避免漂移和回归？**
 
-Skill 是会漂移的控制器，需要 eval、版本和回归测试。
+机制包括 trigger evals、output evals、safety evals、regression suites、versioning、compatibility notes 和 patch hypotheses。
 
-每次修改 skill 都应该说明：它要减少哪种失败，增加了什么成本，哪些 eval 能发现回归。
+没有 eval 的 skill 是作者信念，不是工程资产。
 
-## 7. SkillValue
+## 7. 放置决策
 
-Skill 应该按净可靠性收益评价：
+ASCT 不认为每条有用控制都应该成为 skill。它要求每条控制放到能以最低成本和风险减少失败的位置。
+
+可能的位置：
+
+| 位置 | 适合什么 |
+|---|---|
+| Skill | 选择性加载的重复任务 workflow |
+| Global instruction | 始终适用的规范和约束 |
+| Command | 显式宏工作流或多 skill 编排 |
+| Hook | 生命周期 gate、状态刷新、危险动作拦截 |
+| Script | 确定性、重复、格式敏感的工作 |
+| Reference | 长内容或条件性知识 |
+| Asset | 模板、schema、数据文件、示例 |
+| Repo memory | 项目术语、ADR、agent brief、已知约束 |
+| Collection routing | skill 优先级、冲突解决、安装范围 |
+
+成熟 skill 作者不会只问“这个 skill 该写什么”，还会问“这个控制应该放在哪里”。
+
+## 8. Skill collection
+
+真实 skill system 往往包含多个 skills、commands、hooks、indexes、marketplace metadata、global instructions 和 repo memory。ASCT 把这看成 collection-level design，而不是新基础概念。
+
+在 collection 层面，七个控制面再次出现：
+
+- 激活控制变成 routing 和 discovery。
+- 意图控制变成 command design 和任务拆解。
+- 状态控制变成共享项目记忆和生成索引。
+- 轨迹控制变成 skill graph。
+- 执行控制变成共享 scripts、hooks 和 tool policy。
+- 完成控制变成跨 skill handoff contract。
+- 演化控制变成版本、回归、废弃和发布治理。
+
+理论不变，作用范围扩大。
+
+## 9. 九条设计定律
+
+1. **触发边界定律**：skill 的第一质量是正确激活。
+2. **任务编译定律**：skill 把用户原话编译成任务框架和运行模式。
+3. **上下文经济定律**：`SKILL.md` 里的每个 token 都应该买到行为改变。
+4. **证据外部化定律**：当前事实应来自外部证据，而不是模型隐式记忆。
+5. **轨迹约束定律**：workflow 的意义是让坏路径更难发生。
+6. **自由度风险定律**：任务风险越高，agent 自由度越应降低。
+7. **确定性外包定律**：模型负责判断，工具负责确定性执行。
+8. **完成证明定律**：done = 输出 + 证据 + 验证 + 限制条件。
+9. **漂移回归定律**：skill 是会漂移的控制器，需要 eval、版本和回归测试。
+
+## 10. 价值与安全
+
+ASCT 用净可靠性收益评估 skill：
 
 ```text
 SkillValue(s, D) =
@@ -284,47 +206,42 @@ SkillValue(s, D) =
   - Risk(s, D)
 ```
 
-其中：
-
-- `s` 是 skill。
-- `D` 是任务分布。
-- `Success` 由任务特定标准衡量。
-- `Cost` 包括触发成本、上下文成本、工具成本、用户摩擦和维护成本。
-- `Risk` 包括安全风险、副作用风险、隐私风险和误触发风险。
-
-Skill 可被接受的前提：
+首先必须满足：
 
 ```text
 SafetyRisk(s, D) <= SafetyBudget
 ```
 
-Skill 值得保留的前提：
+然后才讨论：
 
 ```text
 SkillValue(s, D) > 0
 ```
 
-## 8. ASCT 设计循环
+## 11. 设计循环
 
 1. 定义任务分布。
-2. 识别 base agent 可能出现的失败模式。
-3. 选择控制面。
-4. 写激活分类器。
-5. 写运行时控制器。
-6. 外部化证据和长记忆。
-7. 委托确定性工作。
-8. 定义完成证明。
-9. 加 eval 和 regression case。
-10. 通过 patch hypothesis 演进。
+2. 识别基础 agent 的失败模式。
+3. 做放置决策。
+4. 选择控制面。
+5. 写激活分类器。
+6. 写运行时控制器。
+7. 外部化证据和长记忆。
+8. 外包确定性工作。
+9. 定义完成证明。
+10. 增加 eval 和 regression。
+11. 通过 patch hypothesis 演化。
 
-## 9. ASCT 不是什么
+## 12. ASCT 不是什么
 
 ASCT 不是：
 
 - 官方 Agent Skills 规范；
 - 所有 LLM 应用的统一理论；
-- 每个 skill 都必须具备每个控制面的要求；
-- 让简单任务过度结构化的理由；
-- 领域专业知识或评估的替代品。
+- 每个 skill 都必须包含所有控制面的理由；
+- 把简单任务过度结构化的借口；
+- 领域知识的替代品；
+- 实证评估的替代品；
+- 把每条有用规则都塞进 `SKILL.md` 的理由。
 
-ASCT 是一个设计镜片。它帮助你判断一个 skill 控制了什么、成本是什么、风险是什么，以及它是否真的改善了真实任务分布上的 agent 行为。
+ASCT 是一个设计透镜。它帮助作者判断 skill 控制了什么、花费什么、冒什么风险，以及是否在真实任务分布上改善行为。

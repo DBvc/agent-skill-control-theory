@@ -1,95 +1,127 @@
 # 七个控制面
 
-ASCT 认为 skill 通过七个控制面影响 agent 行为。一个 skill 不需要全部七个控制面，应该根据任务分布和主要失败模式选择。
+控制面是 skill 可以影响 agent 行为的部分。ASCT 定义七个控制面：激活、意图、状态、轨迹、执行、完成、演化。
 
-## 1. Activation Control
+它们不是每个 `SKILL.md` 必须出现的章节，而是诊断工具。设计 skill 时要问：这个任务分布需要控制哪些面，哪些面可以保持轻量。
 
-**问题：** 该不该使用这个 skill？
+## 1. 激活控制
 
-当误触发风险高时重点设计。
+**问题：这个 skill 是否该被使用？**
 
-检查项：
+机制：`name`、`description`、显式命令、not-for 边界、near-miss 示例、相邻 skill 路由、生成索引、trigger evals。
 
-- `description` 是否包含任务、触发关键词和上下文？
-- 是否包含 not-for 或 near-miss 边界？
-- 是否命名并路由相邻 skill？
-- 是否有 positive、negative、near-miss trigger eval？
+一个触发错误的 skill 会直接降低可靠性。比如 debug skill 错触发到普通 code review，会让 agent 做不必要的根因分析；release skill 错触发到 release notes 写作，则可能引入不必要的外部动作风险。
 
-## 2. Intent Control
+评审问题：
 
-**问题：** 用户真正要的任务是什么？
+- 正向触发是什么？
+- 负向触发是什么？
+- near-miss 是什么？
+- 哪些 skill 会与它竞争？
+- 如果 description 被宿主截短，关键触发词还在吗？
 
-当同一句用户表达可能对应多个任务时重点设计。
+## 2. 意图控制
 
-检查项：
+**问题：用户真正要完成什么任务？**
 
-- 是否有 mode routing？
-- 是否定义 required inputs？
-- 是否定义何时澄清？
-- 是否定义 non-goals？
+用户语言是压缩过的。“帮我看看”可能是 review、debug、design、rewrite、release check、decision support。
 
-## 3. State Control
+机制：mode routing、input contract、clarification gate、non-goal、任务类型决策树、安全重定向。
 
-**问题：** 当前真实状态是什么？
+常见模式：
 
-当当前事实、代码库状态、API 版本或 artifact 状态重要时重点设计。
+```text
+quick: 低风险、范围清楚
+standard: 普通任务，有中等不确定性
+deep: 高风险、宽范围、公开、架构或安全敏感
+clarification: 缺少必要输入
+safety_redirect: 不安全或不合法请求
+```
 
-检查项：
+## 3. 状态控制
 
-- source of truth 是什么？
-- 行动前必须检查哪些证据？
-- 是否区分事实、假设和判断？
-- 外部事实是否有 freshness policy？
+**问题：当前真实情况是什么？**
 
-## 4. Trajectory Control
+状态控制防止 agent 依赖过期记忆、想象出来的文件结构、过时 API 或未经验证的用户假设。
 
-**问题：** agent 应该走什么路径？
+机制：读文件、看 diff、命令输出、日志、官方文档、截图、渲染产物、issue 历史、ADR、项目术语表、持久项目记忆。
 
-当 agent 容易修症状、跳步骤或硬往前冲时重点设计。
+示例 source hierarchy：
 
-检查项：
+```text
+直接工具输出
+> 当前文件和 diff
+> 官方文档
+> 渲染产物或截图
+> 用户陈述
+> 推断
+> 猜测
+```
 
-- 是否有 hard gates？
-- 是否有明确 stop conditions？
-- 是否定义 fallback paths？
-- 失败时是否有 handoff 格式？
+## 4. 轨迹控制
 
-## 5. Execution Control
+**问题：agent 应该沿什么路径行动？**
 
-**问题：** 哪些操作需要确定性工具？
+轨迹控制是 workflow 层。workflow 的目的不是仪式，而是减少坏路径概率。
 
-当任务涉及解析、验证、渲染、格式、计算或高风险外部动作时重点设计。
+机制：workflow、hard gates、stop conditions、fallback、escalation、handoff、checkpoint。
 
-检查项：
+弱控制：
 
-- 哪些步骤应该交给 scripts？
-- 脚本是否自包含，并清楚说明依赖？
-- 脚本输出是否简洁有用？
-- 危险动作是否有确认或 dry-run？
+```text
+仔细一点，系统地排查。
+```
 
-## 6. Completion Control
+强控制：
 
-**问题：** 什么时候可以声称 done？
+```text
+修改代码前必须建立可复现的 pass/fail 信号。
+提出修复前必须写出可证伪的 root-cause hypothesis。
+三个假设失败后停止，并输出 handoff。
+```
 
-当 agent 可能过度声称成功时重点设计。
+## 5. 执行控制
 
-检查项：
+**问题：哪些操作需要确定性工具？**
 
-- 最终输出是否包含 validation？
-- 是否禁止无证据 claim？
-- 是否要求 known limitations？
-- 未验证工作是否明确标注？
+核心区分：
 
-## 7. Evolution Control
+```text
+模型负责判断，工具负责确定性执行。
+```
 
-**问题：** skill 如何避免漂移？
+适合脚本或工具的任务：解析、验证、渲染、计数、格式化、schema check、公式重算、危险命令拦截。
 
-当 skill 重要到值得维护时重点设计。
+## 6. 完成控制
 
-检查项：
+**问题：agent 什么时候可以声称完成？**
 
-- 是否有 trigger eval？
-- 是否有 output eval？
-- 是否有 safety eval？
-- 历史失败是否进入 regression cases？
-- 每次改动是否有 patch hypothesis？
+完成控制用于抑制完成幻觉。
+
+核心约束：
+
+```text
+final_claims ⊆ validated_evidence
+```
+
+好的完成输出包括：做了什么、证据、验证、未验证项、已知限制、剩余风险。
+
+## 7. 演化控制
+
+**问题：skill 如何避免漂移和回归？**
+
+机制：trigger evals、output evals、process evals、safety evals、regression cases、compatibility notes、versioning、deprecation policy、patch hypotheses。
+
+没有 eval 的 skill 是作者信念，不是工程资产。
+
+## 8. 控制面的组合
+
+七个控制面相互影响：
+
+- 激活控制差，会增加上下文成本和错误轨迹风险。
+- 状态控制差，会削弱完成控制。
+- 执行控制差，会制造虚假完成证明。
+- 意图控制差，会让 agent 进入错误 workflow。
+- 演化控制差，会让其他控制面随时间衰减。
+
+强 skill 不是最大化所有控制面，而是在任务分布上以合适强度使用必要控制。

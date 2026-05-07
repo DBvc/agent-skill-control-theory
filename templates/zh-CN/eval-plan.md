@@ -1,83 +1,89 @@
-# Skill Eval 计划
+# Eval 计划
 
 ## Skill
 
-**名称：**
+Name:
 
-**版本 / commit：**
+Version:
 
-**任务分布：**
+Task distribution:
 
 ## Baseline
 
-比较对象：
+Compare against:
 
-- [ ] 无 skill
-- [ ] 旧版本
-- [ ] 竞争 skill
-- [ ] 只有人类 rubric
+- [ ] no skill
+- [ ] old skill
+- [ ] lighter skill
+- [ ] competing skill
+- [ ] human checklist
 
 ## Trigger evals
 
-| Case ID | 用户 prompt | 是否应触发 | 期望 mode | 备注 |
-|---|---|---:|---|---|
-| pos-001 | | yes | | |
-| neg-001 | | no | | |
-| near-001 | | no or different skill | | |
-| safety-001 | | safety redirect | | |
+Positive cases:
 
-## Process evals
-
-| Case ID | 必须行为 | 通过标准 |
+| Prompt | Expected | Notes |
 |---|---|---|
-| proc-001 | | |
+|  | activate |  |
 
-示例：
+Negative cases:
 
-- 总结前读取真实 diff。
-- debug 前建立 pass/fail loop。
-- 未批准不执行外部动作。
-- 多次假设失败后停止。
-
-## Output evals
-
-| Case ID | 期望输出属性 | 通过标准 |
+| Prompt | Expected | Notes |
 |---|---|---|
-| out-001 | | |
+|  | do_not_activate |  |
 
-示例：
+Near-miss cases:
 
-- 每个 finding 有 evidence。
-- 最终 claim 映射到 validation。
-- Unknowns 被标注。
-- 公共产物不包含过程闲聊。
+| Prompt | Expected | Prefer | Notes |
+|---|---|---|---|
+|  | do_not_activate |  |  |
 
-## Safety evals
+## Process assertions
 
-| Case ID | 风险 | 期望行为 |
-|---|---|---|
-| safe-001 | | |
+agent 应该：
 
-## Metrics
+- 
 
-| 指标 | 测量方式 |
+agent 不应该：
+
+- 
+
+## 输出 Rubric
+
+| Criterion | Weight | Notes |
+|---|---:|---|
+| Correctness |  |  |
+| Evidence |  |  |
+| Validation |  |  |
+| Actionability |  |  |
+| Limitations |  |  |
+| Safety |  |  |
+
+## 安全用例
+
+| Case | Expected behavior |
 |---|---|
-| Trigger precision | |
-| Trigger recall | |
-| Near-miss false positive rate | |
-| Output quality | |
-| Unsupported claims | |
-| Validation rate | |
-| Token/context cost | |
-| User friction | |
-| Safety incidents | |
+|  |  |
 
-## 决策
+## 成本指标
 
-- [ ] Keep
-- [ ] Revise
-- [ ] Deprecate
-- [ ] Split
-- [ ] Merge
+Track:
 
-**理由：**
+- context size;
+- tool calls;
+- elapsed time;
+- user turns;
+- monetary cost;
+- maintenance burden.
+
+## 通过标准
+
+```text
+
+```
+
+## 回归用例
+
+| Historical failure | Expected fixed behavior |
+|---|---|
+|  |  |

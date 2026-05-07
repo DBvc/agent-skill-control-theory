@@ -2,35 +2,71 @@
 
 Agent Skill Control Theory (ASCT) is a first-principles framework for designing and evaluating LLM agent skills.
 
-It is intentionally narrower than general agent architecture. It focuses on **skills**: filesystem-like packages that use `SKILL.md`, metadata, references, scripts, assets, and progressive disclosure to guide an agent on specific task distributions.
+It is intentionally narrower than general agent architecture. It focuses on skills: portable, filesystem-like packages that use `SKILL.md`, metadata, references, scripts, assets, and progressive disclosure to guide an agent on specific task distributions.
 
-## 1. Why a theory is needed
+## 1. The central claim
 
-Many skill repositories begin as collections of useful prompts. That works for a while, but prompt collections tend to drift into three failure modes:
+The central claim of ASCT is:
 
-1. **Overfitting to anecdotes**: every new failure adds one more rule.
-2. **Context inflation**: the main skill file becomes a suitcase full of every possible concern.
-3. **Unmeasured confidence**: authors believe a skill is better because it feels more complete.
+```text
+A skill is a selectively loaded policy controller for an LLM agent.
+```
 
-ASCT starts from the agent, not from existing skill examples.
+This definition is compact, but each word matters.
 
-An LLM agent can be modeled as:
+- **Skill**: a reusable package that changes agent behavior on a recurring task distribution.
+- **Selectively loaded**: the skill is not always active. It is chosen through explicit invocation, implicit matching, or host-specific routing.
+- **Policy controller**: the skill changes the agent's action distribution. It makes some paths more likely, some paths less likely, and some paths forbidden.
+- **LLM agent**: the target is not a static text generator. The agent may read files, call tools, execute code, inspect outputs, revise plans, and affect external state.
+
+This is why a skill is not merely a prompt. A prompt asks for a response. A skill controls a recurring agent behavior pattern.
+
+## 2. Why prompt collections are not enough
+
+A prompt collection can improve local behavior. But a skill system must solve harder problems:
+
+1. **Activation**: the agent must know when to use the skill and when not to use it.
+2. **Ambiguity**: the agent must interpret vague user requests as task frames.
+3. **State**: the agent must ground itself in the current repository, document, tool, or environment.
+4. **Trajectory**: the agent must avoid plausible but wrong next steps.
+5. **Execution**: the agent must delegate deterministic operations to tools.
+6. **Completion**: the agent must not claim success without evidence.
+7. **Evolution**: the skill must avoid drift as models, tools, APIs, and workflows change.
+
+A prompt collection usually contains advice. A skill system contains controls.
+
+## 3. The minimal agent model
+
+ASCT models an LLM agent as:
 
 ```text
 Agent = π(action | context, tools, observations, memory)
 ```
 
-The agent chooses actions under the influence of context, tools, observations, and memory. A skill matters because it changes those conditions.
-
-## 2. Core definition
+The agent selects actions under the influence of context, installed tools, observations, and memory. A skill changes these conditions.
 
 ```text
-Skill = a selectively loaded policy controller for an LLM agent.
+Base agent:
+  π0(action | C)
+
+Skill-activated agent:
+  πs(action | C + I_s + R_s + T_s + V_s)
 ```
 
-A skill is not merely a knowledge bundle. It is a control layer that activates for a task distribution and changes the agent's action distribution.
+Where:
 
-The common skill structure maps naturally to control functions:
+- `I_s`: runtime instructions, usually `SKILL.md`.
+- `R_s`: references, assets, project memory, or other external context.
+- `T_s`: tools or scripts made salient by the skill.
+- `V_s`: validation and completion rules.
+
+The skill does not replace the agent. It shapes the agent.
+
+## 4. Why the standard skill structure matters
+
+The public Agent Skills format defines a skill as a directory containing at minimum a `SKILL.md` file with YAML frontmatter and Markdown body. Optional directories include `scripts/`, `references/`, and `assets/`.
+
+ASCT interprets these files as control functions:
 
 | Artifact | Control function |
 |---|---|
@@ -38,244 +74,170 @@ The common skill structure maps naturally to control functions:
 | `SKILL.md` | Runtime controller |
 | `references/` | External semantic memory |
 | `scripts/` | Deterministic executors |
-| `assets/` | Material priors |
+| `assets/` | Reusable material priors |
 | `evals/` | Controller regression tests |
 
-This mapping is not only stylistic. It follows from progressive disclosure: metadata is always visible, the full `SKILL.md` is loaded only after activation, and additional files are accessed only when needed.
+This mapping follows from progressive disclosure. Metadata is visible before activation. The full `SKILL.md` is loaded only after activation. References, scripts, and assets are used only when needed.
 
-## 3. Definitions
+Progressive disclosure is not just a packaging convenience. It is a theory of context economy. It lets the skill author decide what must be visible for selection, what must be visible after activation, and what should remain available but not loaded by default.
 
-### Agent
+## 5. The five postulates
 
-A context-conditioned policy system that selects actions using the current prompt, tools, observations, and memory.
-
-### Skill
-
-A selectively loaded policy controller that changes an agent’s behavior for a class of tasks.
-
-### Task distribution
-
-A recurring set of tasks with similar inputs, constraints, desired outputs, and failure modes.
-
-### Failure mode
-
-A high-probability path by which the base agent fails on the task distribution.
-
-### Control surface
-
-A part of agent behavior that a skill can influence: activation, intent, state, trajectory, execution, completion, or evolution.
-
-### Evidence
-
-Any externally observable support for a claim: file contents, diffs, logs, official docs, command output, tests, screenshots, rendered artifacts, user statements, or persistent project memory.
-
-### Completion proof
-
-The evidence and validation needed before the agent may claim the task is done.
-
-## 4. Postulates
+ASCT rests on five postulates.
 
 ### P1. Conditional Policy
 
 Agent behavior changes with context, instructions, tools, observations, and resources.
 
-If this were false, skills could not work. A skill is useful only because the agent’s policy is conditionable.
+A skill works only because the agent's behavior is conditionable. If instructions, examples, scripts, references, and validation rules did not change the policy, skill authoring would be pointless.
 
 ### P2. Bounded Resources
 
-Context, attention, tool calls, execution time, user patience, and safety budget are finite.
+Context, attention, tool calls, execution time, user patience, monetary budget, and safety budget are finite.
 
-Therefore, the right skill is not the longest skill. The right skill is the smallest sufficient controller.
+This means a longer skill is not automatically a better skill. Overly broad instructions can crowd out task evidence. Too many installed skills can weaken activation. Too many validation steps can create friction. Too many scripts can increase audit cost.
 
 ### P3. Non-zero Fallibility
 
 Agents have non-zero error rates in activation, intent inference, state grounding, trajectory selection, execution, and completion claims.
 
-Therefore, skills should be failure-mode first.
+Therefore, skill design should begin with failure modes. A skill is justified when it reduces a repeated, meaningful failure mode at acceptable cost.
 
 ### P4. External Groundability
 
-Many task-relevant truths and deterministic operations can be handled more reliably by external evidence and tools than by model generation alone.
+Many task-relevant facts and deterministic operations can be handled more reliably by external evidence and tools than by model generation alone.
 
-Therefore, a mature skill moves facts out of latent memory and moves deterministic work out of free-form language generation.
+This is the basis for reading files, inspecting diffs, using official docs, running tests, rendering artifacts, validating schemas, and using scripts.
 
 ### P5. Drift
 
-Models, tools, APIs, repositories, organizations, and task distributions change over time.
+Models, tools, APIs, repositories, organizations, task distributions, and user habits change over time.
 
-Therefore, skills are not static documents. They are drifting controllers that need evaluation and regression.
+Therefore, a skill should be evaluated and maintained. Its trigger behavior, output quality, safety posture, and maintenance cost can all regress.
 
-## 5. Seven control surfaces
+## 6. The seven control surfaces
 
-### 5.1 Activation Control
+ASCT names seven places where a skill can control agent behavior.
+
+### 6.1 Activation Control
 
 Question: **Should this skill be used?**
 
-Mechanisms:
+Activation Control is implemented through `name`, `description`, explicit commands, not-for boundaries, adjacent skill routing, generated indexes, and trigger evals.
 
-- `name`
-- `description`
-- explicit invocation names
-- not-for boundaries
-- adjacent skill routing
-- trigger evals
+A bad activation classifier can make a good skill harmful. If a debugging skill activates for ordinary code review, it may force unnecessary root-cause analysis. If a release skill activates for release-note writing, it may introduce unsafe external action assumptions.
 
-A bad activation classifier can make a good runtime controller harmful.
-
-### 5.2 Intent Control
+### 6.2 Intent Control
 
 Question: **What task is the user actually asking for?**
 
-Mechanisms:
+User utterances are compressed. “Check this” may mean review, debug, redesign, rewrite, test, release, explain, or decide. A skill compiles this utterance into a task frame and a runtime mode.
 
-- mode routing
-- input contract
-- clarification gates
-- non-goals
-- task frame selection
+Mechanisms include mode routing, input contracts, clarification gates, non-goals, and safety redirects.
 
-User utterances are often ambiguous. A skill compiles them into task frames.
-
-### 5.3 State Control
+### 6.3 State Control
 
 Question: **What is true right now?**
 
-Mechanisms:
+State Control prevents the agent from relying on stale memory or imagined facts. It uses current files, diffs, logs, official docs, test output, screenshots, rendered artifacts, issue history, ADRs, glossaries, and project memory.
 
-- reading files
-- inspecting diffs
-- official docs
-- logs and command output
-- rendered screenshots
-- project memory such as glossary, ADRs, issue history
+The core rule is: current facts should be externalized.
 
-State control prevents the agent from acting on stale or imagined facts.
-
-### 5.4 Trajectory Control
+### 6.4 Trajectory Control
 
 Question: **What path should the agent follow?**
 
-Mechanisms:
+Trajectory Control is the skill's workflow layer. But workflow is not ceremony. It exists to reduce the probability of bad action paths.
 
-- workflow
-- hard gates
-- stop conditions
-- fallback paths
-- escalation rules
-- handoff rules
+Good trajectory control includes hard gates, stop conditions, fallback paths, escalation rules, handoff formats, and validation checkpoints.
 
-Workflow is not a ceremony. It is a constraint on bad action paths.
-
-### 5.5 Execution Control
+### 6.5 Execution Control
 
 Question: **Which operations require deterministic tools?**
 
-Mechanisms:
+Execution Control decides which parts of the task should be handled by scripts, validators, renderers, parsers, linters, dry-runs, or other tools.
 
-- scripts
-- validators
-- renderers
-- linters
-- schema checks
-- dry-run commands
-- dangerous action guards
+The guiding distinction is:
 
-Models should judge; deterministic tools should execute.
+```text
+Models judge. Tools execute deterministically.
+```
 
-### 5.6 Completion Control
+### 6.6 Completion Control
 
 Question: **When may the agent claim done?**
 
-Mechanisms:
+Completion Control suppresses completion hallucination. It requires proof fields, validation results, claim-evidence mapping, confidence levels, known limitations, and unverified-work disclosure.
 
-- validation commands
-- proof fields
-- claim-evidence mapping
-- confidence levels
-- known limitations
-- unverified work disclosure
-
-A skill should suppress completion hallucination.
-
-### 5.7 Evolution Control
-
-Question: **How does the skill avoid drift and regression?**
-
-Mechanisms:
-
-- trigger evals
-- output evals
-- safety evals
-- versioning
-- patch hypotheses
-- regression suites
-- compatibility notes
-
-A skill without evaluation is an author belief, not an engineering asset.
-
-## 6. Design laws
-
-### Law 1: Trigger Boundary Law
-
-A skill’s first quality is correct activation.
-
-Wrong activation causes direct harm: wasted context, wrong workflow, unnecessary friction, or unsafe action.
-
-### Law 2: Task Compilation Law
-
-A skill compiles user utterances into task frames and runtime modes.
-
-The user says “check this”; the skill must decide whether that means review, debug, design, release check, rewrite, or decision support.
-
-### Law 3: Context Economy Law
-
-Every token in `SKILL.md` should buy behavior change.
-
-Long theory, exhaustive examples, and domain references belong in `references/` unless they are needed on every activation.
-
-### Law 4: Evidence Externalization Law
-
-Current facts should come from external evidence, not latent memory.
-
-Repository state, official APIs, diffs, rendered artifacts, command output, and user-provided documents should outrank model memory.
-
-### Law 5: Trajectory Constraint Law
-
-Workflow exists to make bad paths harder to take.
-
-“Be careful” is weak. “Do not edit code before establishing a reproducible pass/fail signal” is strong.
-
-### Law 6: Freedom-Risk Law
-
-Higher-risk tasks require lower agent freedom.
-
-Creative tasks need room. Destructive actions, release operations, format-sensitive artifacts, and security-sensitive tasks need gates, dry-runs, and validation.
-
-### Law 7: Deterministic Delegation Law
-
-Models judge; tools execute deterministically.
-
-If the same input should produce the same output, prefer a script, validator, parser, or renderer.
-
-### Law 8: Completion Proof Law
-
-Done means output plus evidence, validation, and limitations.
+The central constraint is:
 
 ```text
 final_claims ⊆ validated_evidence
 ```
 
-If validation was not run, the final answer must say so.
+### 6.7 Evolution Control
 
-### Law 9: Drift Regression Law
+Question: **How does the skill avoid drift and regression?**
 
-Skills are drifting controllers and need evals, versions, and regression tests.
+Evolution Control uses trigger evals, output evals, safety evals, regression suites, versioning, compatibility notes, and patch hypotheses.
 
-Every skill change should state the failure it tries to reduce, the cost it adds, and the evals that will detect regressions.
+A skill without evaluation is an author belief, not an engineering asset.
 
-## 7. SkillValue
+## 7. Placement decisions
 
-A skill should be judged by net reliability gain:
+ASCT does not say that every useful control should become a skill. It says every control should be placed where it reduces failure with the least cost and risk.
+
+Possible placements include:
+
+| Placement | Best for |
+|---|---|
+| Skill | Selectively loaded workflow for a recurring task distribution |
+| Global instruction | Always-on norms and engineering discipline |
+| Command | Explicit macro workflow or multi-skill orchestration |
+| Hook | Lifecycle gate, dangerous action block, or automatic state refresh |
+| Script | Deterministic, parse-heavy, numerical, repeatable, or format-sensitive work |
+| Reference | Long or conditional knowledge |
+| Asset | Reusable templates, schemas, data files, or examples |
+| Repo memory | Project glossary, ADRs, agent briefs, known constraints, out-of-scope records |
+| Collection routing | Priority, conflict resolution, installation scope, and skill graph design |
+
+A mature skill author does not ask only “what should this skill say?” They ask “where should this control live?”
+
+## 8. Skill collections
+
+Real-world skill systems often contain multiple skills plus commands, hooks, indexes, marketplace metadata, global instructions, and repo memory. ASCT treats this as collection-level design, not a new primitive.
+
+At collection scale, the same control surfaces appear again:
+
+- Activation Control becomes routing and discovery.
+- Intent Control becomes command design and task decomposition.
+- State Control becomes shared project memory and generated indexes.
+- Trajectory Control becomes skill graph design.
+- Execution Control becomes shared scripts, hooks, and tool policies.
+- Completion Control becomes cross-skill handoff contracts.
+- Evolution Control becomes versioning, regression, deprecation, and release governance.
+
+The theory stays the same. The scope changes.
+
+## 9. The design laws
+
+The nine design laws translate ASCT into authoring practice.
+
+1. **Trigger Boundary Law**: a skill's first quality is correct activation.
+2. **Task Compilation Law**: a skill compiles user utterances into task frames and runtime modes.
+3. **Context Economy Law**: every token in `SKILL.md` should buy behavior change.
+4. **Evidence Externalization Law**: current facts should come from external evidence, not latent memory.
+5. **Trajectory Constraint Law**: workflow exists to make bad paths harder to take.
+6. **Freedom-Risk Law**: higher-risk tasks require lower agent freedom.
+7. **Deterministic Delegation Law**: models judge; tools execute deterministically.
+8. **Completion Proof Law**: done means output plus evidence, validation, and limitations.
+9. **Drift Regression Law**: skills are drifting controllers and need evals, versions, and regression tests.
+
+These laws are developed in [design-laws.md](design-laws.md).
+
+## 10. Value and safety
+
+ASCT evaluates a skill by net reliability gain:
 
 ```text
 SkillValue(s, D) =
@@ -284,40 +246,40 @@ SkillValue(s, D) =
   - Risk(s, D)
 ```
 
-Where:
-
-- `s` is the skill.
-- `D` is the task distribution.
-- `Success` is measured by task-specific criteria.
-- `Cost` includes trigger cost, context cost, tool cost, user friction, and maintenance cost.
-- `Risk` includes safety risk, side-effect risk, privacy risk, and wrong-trigger risk.
-
 A skill is admissible only if:
 
 ```text
 SafetyRisk(s, D) <= SafetyBudget
 ```
 
-A skill is worth keeping only if:
+Then it is worth keeping only if:
 
 ```text
 SkillValue(s, D) > 0
 ```
 
-## 8. The ASCT design loop
+This prevents two common mistakes:
+
+1. Treating more rules as more reliability.
+2. Treating task success as sufficient even when safety or maintenance risk is unacceptable.
+
+## 11. The ASCT design loop
+
+A practical design loop:
 
 1. Define the task distribution.
-2. Identify likely base-agent failure modes.
-3. Choose control surfaces.
-4. Write the activation classifier.
-5. Write the runtime controller.
-6. Externalize evidence and long memory.
-7. Delegate deterministic work.
-8. Define completion proof.
-9. Add evals and regression cases.
-10. Evolve through patch hypotheses.
+2. Identify base-agent failure modes.
+3. Decide placement.
+4. Choose control surfaces.
+5. Write activation classifier.
+6. Write runtime controller.
+7. Externalize evidence and long memory.
+8. Delegate deterministic work.
+9. Define completion proof.
+10. Add evals and regression cases.
+11. Evolve through patch hypotheses.
 
-## 9. What ASCT is not
+## 12. What ASCT is not
 
 ASCT is not:
 
@@ -325,6 +287,8 @@ ASCT is not:
 - a universal theory of all LLM applications;
 - a claim that every skill needs every control surface;
 - a reason to over-structure simple tasks;
-- a substitute for domain expertise or evaluation.
+- a substitute for domain expertise;
+- a substitute for empirical evaluation;
+- an excuse to put every useful rule into `SKILL.md`.
 
-ASCT is a design lens. It helps you ask what a skill controls, what it costs, what it risks, and whether it improves behavior on a real task distribution.
+ASCT is a design lens. It helps skill authors ask what a skill controls, what it costs, what it risks, and whether it improves behavior on a real task distribution.

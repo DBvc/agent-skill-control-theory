@@ -1,31 +1,41 @@
-# Influences and Sources
+# Sources and Design Influences
 
-ASCT is not an official standard and does not claim ownership over the Agent Skills format.
+ASCT is not an official standard. It is a working theory intended to explain and guide the design of LLM agent skills.
 
-It is a working theory built from:
+## Primary public sources
 
-1. The public Agent Skills specification.
-2. Official OpenAI Codex skill documentation.
-3. Official Anthropic Agent Skills documentation.
-4. Public skill repositories and real skill-authoring patterns.
-5. General observations about LLM agents, tool use, bounded context, hallucination, evaluation, and software engineering workflows.
+- [Agent Skills specification](https://agentskills.io/specification)
+- [OpenAI Codex skills documentation](https://developers.openai.com/codex/skills)
+- [Anthropic Agent Skills overview](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
 
-## Scope of sources
+These sources define or explain the common skill shape: `SKILL.md`, frontmatter metadata, optional `scripts/`, `references/`, `assets/`, and progressive disclosure.
 
-This repository intentionally avoids ranking or critiquing specific public skill repositories in the core theory.
+## Public repository influences
 
-Reasons:
+ASCT was also informed by studying public skill repositories across several styles:
 
-- Public repositories change quickly.
-- Repository-specific judgments become stale.
-- This project is meant to be a theory and design toolkit, not a review archive.
-- The same repository can improve, pivot, or reorganize after this theory is published.
+- official skill repositories;
+- personal engineering workflow skills;
+- security audit skills;
+- design and taste skills;
+- scientific and domain-specific skill catalogs;
+- product and planning skills;
+- tool ecosystem skills;
+- persistent-memory and file-planning skills;
+- compressed-interaction mode skills.
 
-## Public sources worth reading
+The core theory does not rank or critique these repositories. Repository-specific observations can become stale as projects evolve. ASCT therefore keeps concrete examples synthetic unless a case study is explicitly dated and scoped.
 
-- Agent Skills specification: https://agentskills.io/specification
-- OpenAI Codex skills docs: https://developers.openai.com/codex/skills
-- Anthropic Agent Skills article: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
-- Claude Agent Skills docs: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
-- OpenAI skills repository: https://github.com/openai/skills
-- Anthropic skills repository: https://github.com/anthropics/skills
+## Research background
+
+ASCT is compatible with broader ideas from:
+
+- tool-using agents;
+- retrieval-augmented generation;
+- prompt and agent evaluation;
+- software engineering feedback loops;
+- workflow design;
+- safety and threat modeling;
+- human-computer interaction.
+
+The repository intentionally keeps the core theory close to skill authoring rather than turning into a general agent architecture theory.

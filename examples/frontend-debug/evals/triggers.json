@@ -1,46 +1,39 @@
 {
   "skill": "frontend-debug",
+  "version": "0.1.0",
   "cases": [
     {
-      "id": "pos-runtime-001",
-      "kind": "positive",
-      "prompt": "The login button stopped submitting after the latest frontend change. Can you diagnose and fix it?",
-      "expected_trigger": true,
-      "expected_mode": "standard"
+      "id": "positive-runtime-bug",
+      "type": "positive",
+      "prompt": "The checkout button stops responding after I change the shipping method. Find the root cause and fix it.",
+      "expected": "activate"
     },
     {
-      "id": "pos-visual-001",
-      "kind": "positive",
-      "prompt": "The dashboard cards overlap on mobile after this CSS change. Please debug it.",
-      "expected_trigger": true,
-      "expected_mode": "standard"
+      "id": "positive-rendering-regression",
+      "type": "positive",
+      "prompt": "This modal used to be centered, but after the last change it renders partly off-screen on mobile.",
+      "expected": "activate"
     },
     {
-      "id": "pos-flaky-001",
-      "kind": "positive",
-      "prompt": "The search box sometimes loses typed text during fast input. It is flaky and I need root cause.",
-      "expected_trigger": true,
-      "expected_mode": "deep"
+      "id": "negative-new-ui",
+      "type": "negative",
+      "prompt": "Design a new dashboard page for our analytics product.",
+      "expected": "do_not_activate",
+      "prefer": "design-skill"
     },
     {
-      "id": "neg-feature-001",
-      "kind": "negative",
-      "prompt": "Build a new settings page with profile, billing, and security tabs.",
-      "expected_trigger": false
+      "id": "near-miss-code-review",
+      "type": "near_miss",
+      "prompt": "Review this completed React diff before I merge it.",
+      "expected": "do_not_activate",
+      "prefer": "code-review-skill"
     },
     {
-      "id": "near-design-001",
-      "kind": "near_miss",
-      "prompt": "This landing page feels generic and visually boring. Make it more distinctive.",
-      "expected_trigger": false,
-      "expected_alternative": "design or UI craft skill"
-    },
-    {
-      "id": "near-review-001",
-      "kind": "near_miss",
-      "prompt": "Review this completed PR for maintainability and performance risks before merge.",
-      "expected_trigger": false,
-      "expected_alternative": "code review skill"
+      "id": "near-miss-visual-taste",
+      "type": "near_miss",
+      "prompt": "This landing page feels bland. Make it more premium.",
+      "expected": "do_not_activate",
+      "prefer": "design-skill"
     }
   ]
 }

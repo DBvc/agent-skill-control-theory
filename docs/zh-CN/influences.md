@@ -1,31 +1,23 @@
-# 启发来源和资料
+# 来源和设计影响
 
-ASCT 不是官方标准，也不声称拥有 Agent Skills 格式。
+ASCT 不是官方标准，而是一套用于解释和指导 LLM agent skill 设计的工作理论。
 
-它是一套工作理论，来源包括：
+## 主要公开来源
 
-1. 公开 Agent Skills specification。
-2. OpenAI Codex skill 官方文档。
-3. Anthropic Agent Skills 官方文档。
-4. 公开 skill 仓库和真实 skill 写作模式。
-5. 关于 LLM agent、工具使用、有界上下文、幻觉、评估和软件工程工作流的一般观察。
+- [Agent Skills specification](https://agentskills.io/specification)
+- [OpenAI Codex skills documentation](https://developers.openai.com/codex/skills)
+- [Anthropic Agent Skills overview](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
 
-## 资料范围
+这些来源定义或解释了常见 skill 结构：`SKILL.md`、frontmatter metadata、可选 `scripts/`、`references/`、`assets/` 以及 progressive disclosure。
 
-本仓库有意避免在核心理论里排名或点评具体公开 skill 仓库。
+## 公开仓库影响
 
-原因：
+ASCT 也受多种公开 skill 仓库启发，包括：官方 skill 仓库、个人工程工作流 skills、安全审计 skills、设计和 taste skills、科学和领域型 skill catalogs、产品和规划 skills、工具生态 skills、持久文件记忆 skills、压缩交互模式 skills。
 
-- 公开仓库变化很快。
-- 仓库级判断容易过期。
-- 本项目目标是理论和设计工具，而不是评论档案。
-- 同一个仓库可能在发布后改进、转向或重组。
+核心理论不排名也不点评具体仓库。仓库级观察会随时间过期，因此 ASCT 默认使用合成案例。若要写具体案例，应单独标明日期、commit 和观察范围。
 
-## 推荐阅读资料
+## 更广背景
 
-- Agent Skills specification: https://agentskills.io/specification
-- OpenAI Codex skills docs: https://developers.openai.com/codex/skills
-- Anthropic Agent Skills article: https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills
-- Claude Agent Skills docs: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
-- OpenAI skills repository: https://github.com/openai/skills
-- Anthropic skills repository: https://github.com/anthropics/skills
+ASCT 与以下领域相容：工具型 agents、检索增强生成、prompt/agent eval、软件工程反馈循环、workflow design、安全建模和人机交互。
+
+本仓库刻意保持在 skill authoring 范围内，不扩张成完整 agent architecture 理论。

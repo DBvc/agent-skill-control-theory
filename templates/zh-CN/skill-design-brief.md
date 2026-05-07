@@ -1,119 +1,169 @@
 # Skill 设计简报
 
-在写或修改 skill 之前使用。
-
 ## 1. 场景
 
-**Skill 名称：**
+Name:
 
-**一句话目的：**
+Task distribution:
 
-**任务分布：**
+Repeated context:
 
-**常见用户表达：**
+Stable job-to-be-done:
 
-**期望输出：**
+Expected users:
 
-**非目标：**
+Expected host environments:
 
-## 2. 值得 skill 化吗
+## 2. 创建门槛
 
-| Gate | 回答 |
-|---|---|
-| 是否足够重复？ | |
-| Job-to-be-done 是否稳定？ | |
-| 是否可评估？ | |
-| 是否有非平凡领域内容？ | |
-| 安全边界是否清楚？ | |
+| Gate | Pass? | Notes |
+|---|---|---|
+| Repeated task |  |  |
+| Stable job |  |  |
+| Evaluability |  |  |
+| Domain substance |  |  |
+| Safety budget |  |  |
+| Maintenance owner |  |  |
 
-**结论：** create / checklist / direct answer / reject
+Verdict:
+
+```text
+create | checklist | direct-answer | global-instruction | command | hook | script | reference | reject
+```
 
 ## 3. 失败地图
 
-没有这个 skill 时会发生什么？
+Base-agent failures:
 
-| 失败类别 | 可能失败 |
-|---|---|
-| Activation | |
-| Intent | |
-| State | |
-| Trajectory | |
-| Execution | |
-| Completion | |
-| Evolution | |
+- Activation:
+- Intent:
+- State:
+- Trajectory:
+- Execution:
+- Completion:
+- Evolution:
+- Safety:
 
 ## 4. 控制面
 
-需要哪些控制面？
+Which surfaces are required?
 
-- [ ] Activation Control
-- [ ] Intent Control
-- [ ] State Control
-- [ ] Trajectory Control
-- [ ] Execution Control
-- [ ] Completion Control
-- [ ] Evolution Control
+- [ ] Activation
+- [ ] Intent
+- [ ] State
+- [ ] Trajectory
+- [ ] Execution
+- [ ] Completion
+- [ ] Evolution
 
-## 5. 激活契约
+Why these surfaces?
 
-**Use when：**
+```text
 
-**Not for：**
+```
 
-**Near-miss cases：**
+## 5. 放置决策
 
-**Adjacent skills：**
+Where should the control live?
 
-## 6. 运行时契约
+```text
 
-**Modes：**
+```
 
-**Required inputs：**
+Why not elsewhere?
 
-**Hard gates：**
+```text
 
-**Workflow：**
+```
 
-**Stop conditions：**
+## 6. 激活契约
 
-**Fallback paths：**
+Use when:
 
-## 7. 证据策略
+- 
 
-**Source of truth：**
+Not for:
 
-**Source hierarchy：**
+- 
 
-**最终 claim 前必须验证什么：**
+Near-miss cases:
 
-## 8. 执行策略
+- 
 
-**需要的 scripts：**
+Adjacent skills:
 
-**外部动作：**
+- 
 
-**Approval / dry-run 要求：**
+## 7. 运行时契约
 
-## 9. 完成契约
+Modes:
 
-最终输出必须包含：
+- quick:
+- standard:
+- deep:
+- clarification:
+- safety_redirect:
 
-- [ ] Summary
-- [ ] Evidence
-- [ ] Validation
-- [ ] Known limitations
-- [ ] Remaining risks
+Hard gates:
+
+- 
+
+Workflow:
+
+1. 
+2. 
+3. 
+
+Stop conditions:
+
+- 
+
+Handoff format:
+
+```text
+
+```
+
+## 8. 证据和执行
+
+Source of truth:
+
+- 
+
+Source hierarchy:
+
+```text
+
+```
+
+Scripts or tools needed:
+
+- 
+
+## 9. 完成证明
+
+Final output must include:
+
+- 
+
+Unsupported claims forbidden:
+
+- 
+
+Validation required:
+
+- 
 
 ## 10. Eval 计划
 
-**Positive trigger cases：**
+Baseline:
 
-**Negative trigger cases：**
+Trigger evals:
 
-**Near-miss trigger cases：**
+Output evals:
 
-**Output eval cases：**
+Process evals:
 
-**Safety eval cases：**
+Safety evals:
 
-**Historical regression cases：**
+Regression cases:

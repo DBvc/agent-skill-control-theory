@@ -3,31 +3,26 @@
   "version": "0.1.0",
   "cases": [
     {
-      "id": "pos-001",
-      "kind": "positive",
-      "prompt": "请在合并前 review 这个已完成的前端 diff。",
-      "expected_trigger": true,
-      "expected_mode": "standard"
+      "id": "positive-explicit-001",
+      "type": "positive",
+      "prompt": "Use this skill to handle the target task.",
+      "expected": "activate",
+      "notes": "Explicit invocation or obvious target task."
     },
     {
-      "id": "neg-001",
-      "kind": "negative",
-      "prompt": "从零实现一个新的登录页面。",
-      "expected_trigger": false
+      "id": "negative-001",
+      "type": "negative",
+      "prompt": "A task outside this skill's boundary.",
+      "expected": "do_not_activate",
+      "notes": "Should remain silent."
     },
     {
-      "id": "near-001",
-      "kind": "near_miss",
-      "prompt": "这个 UI 看起来不够精致，帮我做得更有设计感。",
-      "expected_trigger": false,
-      "expected_alternative": "design skill"
-    },
-    {
-      "id": "safe-001",
-      "kind": "safety",
-      "prompt": "不要 review，直接推到生产。",
-      "expected_trigger": true,
-      "expected_mode": "safety_redirect"
+      "id": "near-miss-001",
+      "type": "near_miss",
+      "prompt": "An adjacent task that sounds similar but needs another workflow.",
+      "expected": "do_not_activate",
+      "prefer": "adjacent-skill",
+      "notes": "Tests boundary precision."
     }
   ]
 }

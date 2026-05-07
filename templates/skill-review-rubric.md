@@ -1,45 +1,40 @@
 # Skill Review Rubric
 
-Score each category from 1 to 5.
+Score each dimension from 1 to 5.
 
-| Score | Meaning |
-|---|---|
-| 1 | Missing or actively harmful |
-| 2 | Present but weak |
-| 3 | Usable but incomplete |
-| 4 | Strong |
-| 5 | Production-grade |
+| Dimension | 1 | 3 | 5 | Score |
+|---|---|---|---|---:|
+| Task distribution | Vague or one-off | Some repetition | Clear recurring distribution |  |
+| Worthiness | Prompt would suffice | Mixed | Skill clearly justified |  |
+| Activation | Broad or unclear | Some boundaries | Strong use/not-for/near-miss |  |
+| Intent control | No modes | Some routing | Smallest sufficient mode clear |  |
+| State control | Relies on memory | Some evidence | Clear source hierarchy |  |
+| Trajectory control | Advice only | Basic steps | Gates, stops, fallback, handoff |  |
+| Execution control | Model does deterministic work | Some tools | Deterministic work delegated |  |
+| Completion control | Claims without proof | Some validation | Claims mapped to evidence |  |
+| Context economy | Bloated | Moderate | Lean main file, references split |  |
+| Safety | Implicit | Some gates | Explicit safety budget and action contracts |  |
+| Evolution | No eval | Some examples | Trigger/output/process/safety/regression evals |  |
+| Placement | Everything in skill | Some separation | Controls placed in least-cost location |  |
 
-## Rubric
+## Summary
 
-| Dimension | Score | Notes |
-|---|---:|---|
-| Skill-worthiness: repeated, stable, evaluatable task distribution | | |
-| Activation Control: clear description, use/not-for/near-miss | | |
-| Intent Control: modes, input contract, non-goals | | |
-| State Control: source of truth, evidence hierarchy, freshness policy | | |
-| Trajectory Control: workflow, hard gates, stops, fallback | | |
-| Execution Control: deterministic work delegated to tools/scripts | | |
-| Completion Control: validation, proof fields, limitations | | |
-| Evolution Control: evals, regression, patch hypothesis | | |
-| Context Economy: main SKILL.md is smallest sufficient controller | | |
-| Safety: fail-closed, approvals, no hidden risky behavior | | |
+Strengths:
 
-## Overall rating
+- 
 
-- 45-50: Production-grade skill
-- 38-44: Strong reusable skill
-- 30-37: Usable but needs eval/resources
-- 20-29: Prompt-like checklist
-- <20: Do not publish as a full skill
+Main risks:
 
-## Review questions
+- 
 
-1. What failure mode does this skill reduce?
-2. What new costs does it introduce?
-3. What new risks does it introduce?
-4. What evidence proves it improves over baseline?
-5. What should be moved out of `SKILL.md`?
-6. What deterministic work should be scripted?
-7. What claims must be forbidden unless validated?
-8. What historical failure should become an eval?
+Highest-leverage improvement:
+
+```text
+
+```
+
+Suggested maturity:
+
+```text
+draft | experimental | usable | production | deprecated
+```

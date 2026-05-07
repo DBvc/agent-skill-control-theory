@@ -1,79 +1,61 @@
-# Patch Hypothesis
+# 修改假设
 
-用于影响 trigger boundary、workflow、evidence policy、output contract、tools 或 safety behavior 的 skill 改动。
+## Skill
 
-## 改动摘要
+Name:
 
-**Skill：**
+Version before:
 
-**当前版本 / commit：**
+Version after:
 
-**计划改动：**
+## 目标失败模式
 
-## 目标失败
-
-这个 patch 要减少哪种失败？
-
-- [ ] Wrong trigger
-- [ ] Missed trigger
-- [ ] Intent confusion
-- [ ] State hallucination
-- [ ] Bad trajectory
-- [ ] Fragile execution
-- [ ] Unsupported completion claim
-- [ ] Safety overreach
-- [ ] Context bloat
-- [ ] Maintenance drift
-- [ ] Other:
-
-## 假设
-
-如果我们修改：
+Which failure mode does this patch address?
 
 ```text
-<change>
+
 ```
 
-那么：
+## 拟议修改
 
 ```text
-<expected behavior improvement>
+
 ```
 
-因为：
+## 预期收益
 
 ```text
-<mechanism>
+
 ```
 
 ## 预期成本
 
-- Context cost:
-- User friction:
-- Runtime/tool cost:
-- Maintenance cost:
-- New risk:
+Context cost:
 
-## 需要更新的 eval
+User friction:
 
-- [ ] Trigger evals
-- [ ] Near-miss evals
-- [ ] Output evals
-- [ ] Safety evals
-- [ ] Historical regression cases
+Tool/runtime cost:
+
+Maintenance cost:
+
+Safety risk:
+
+## 更新的 eval
+
+- 
 
 ## 回滚条件
 
-如果出现以下情况则回滚：
+Rollback if:
 
 ```text
-<condition>
+
 ```
 
 ## 评审结果
 
-- [ ] Accept
-- [ ] Revise
-- [ ] Reject
+Accepted:
+
+Rejected:
 
 Notes:

@@ -1,156 +1,87 @@
-# 设计定律
+# 九条设计定律
 
-这些是工程设计定律，不是自然科学定律。它们从 ASCT 的基础假设推出，用来指导 skill 写作。
+ASCT 的设计定律是工程设计定律，不是自然定律。它们从五条基础假设推出，用来指导 skill authoring。
 
 ## 1. 触发边界定律
 
-Skill 的第一质量是正确激活。
+**skill 的第一质量是正确激活。**
 
-### 为什么
+因为 skill 是选择性加载的。如果它在错误任务中触发，内部 workflow 越强，干扰越强。
 
-Skill 是选择性加载的。如果它在错误任务里激活，所有 workflow 都会变成错用的控制。
-
-### 实践
-
-Description 应包含：
-
-- use when；
-- not for；
-- near-miss cases；
-- adjacent skill routing。
+实践：`description` 应包含 use when、not for、near-miss 和相邻 skill 路由。
 
 ## 2. 任务编译定律
 
-Skill 把用户原话编译成任务框架和运行模式。
+**skill 把用户原话编译成任务框架和运行模式。**
 
-### 为什么
+用户说“检查一下”，可能是 review、debug、design、release check、rewrite 或 decision support。skill 要选择最小充分模式，而不是直接执行表面文字。
 
-用户语言经常模糊。Skill 必须选择最小充分模式。
-
-### 实践
-
-定义模式，例如：
-
-- quick；
-- standard；
-- deep；
-- clarification；
-- safety redirect。
+实践：定义 quick、standard、deep、clarification、safety_redirect 等模式。
 
 ## 3. 上下文经济定律
 
-`SKILL.md` 里的每个 token 都应该买到行为改变。
+**`SKILL.md` 里的每个 token 都应该买到行为改变。**
 
-### 为什么
+上下文和注意力有限。长文档不等于高可靠性。
 
-上下文和注意力有限。
-
-### 实践
-
-保持 `SKILL.md` 精炼。长 rubric、案例和参考资料放进 `references/`。确定性检查放进 `scripts/`。
+实践：核心触发和 workflow 放 `SKILL.md`；长 rubric、示例、API 细节放 `references/`；确定性检查放 `scripts/`。
 
 ## 4. 证据外部化定律
 
-当前事实应该来自外部证据，而不是模型潜在记忆。
+**当前事实应来自外部证据，而不是模型隐式记忆。**
 
-### 为什么
+当前文件、diff、官方文档、日志、测试结果、截图和渲染产物通常比模型记忆更可靠。
 
-模型记忆可能过期、不完整或幻觉。
-
-### 实践
-
-定义 source hierarchy：
-
-```text
-直接工具输出 > 当前文件/diff > 官方文档 > 用户声明 > 推断 > 猜测
-```
+实践：定义 source hierarchy，区分事实、假设、判断和未知。
 
 ## 5. 轨迹约束定律
 
-Workflow 的作用是让坏路径更难发生。
+**workflow 的意义是让坏路径更难发生。**
 
-### 为什么
+“Be careful” 很弱。“没有 pass/fail signal 不准改代码” 才是控制。
 
-Agent 总能生成一个看似合理的下一步。Skill 必须阻止坏的“看似合理”。
-
-### 实践
-
-使用：
-
-- hard gates；
-- stop conditions；
-- fallback paths；
-- handoff format。
+实践：使用 hard gates、stop conditions、fallback、handoff。
 
 ## 6. 自由度风险定律
 
-风险越高的任务，agent 自由度越应降低。
+**任务风险越高，agent 自由度越应降低。**
 
-### 为什么
-
-动作越高风险、越不可逆、越有外部副作用，错误行动代价越高。
-
-### 实践
-
-- 创意设计：高自由度，taste rubric。
-- 技术决策：中等自由度，assumptions 和 trade-offs。
-- Debug：受控自由度，feedback loop 和 hypothesis gate。
-- Artifact 生成：低自由度，validators 和 render checks。
-- 发布/删除/外部写操作：极低自由度，approval 和 dry-run。
+创意任务需要自由度，发布、删除、安全 verdict、格式敏感 artifact 需要 gates、dry-runs、validation 和 approvals。
 
 ## 7. 确定性外包定律
 
-模型做判断，工具做确定性执行。
+**模型负责判断，工具负责确定性执行。**
 
-### 为什么
-
-重复、解析密集、数值敏感或格式敏感任务不应依赖自由文本生成。
-
-### 实践
-
-脚本用于：
-
-- 解析；
-- 验证；
-- 渲染；
-- 计数；
-- 格式化；
-- schema check；
-- dangerous command guard。
+解析、计数、格式校验、渲染、schema validation、公式重算、危险命令拦截都更适合脚本或工具。
 
 ## 8. 完成证明定律
 
-Done = output + evidence + validation + limitations。
+**done = 输出 + 证据 + 验证 + 限制条件。**
 
-### 为什么
+核心约束：
 
-Agent 可以生成完成叙事，但实际没完成。
+```text
+final_claims ⊆ validated_evidence
+```
 
-### 实践
-
-要求：
-
-- 改了什么；
-- 跑了什么验证；
-- 验证结果；
-- 已知限制；
-- 未验证事项。
+没有验证就不能说“已验证”；无法验证要显式说明。
 
 ## 9. 漂移回归定律
 
-Skill 是会漂移的控制器，需要 eval、版本和 regression cases。
+**skill 是会漂移的控制器，需要 eval、版本和回归用例。**
 
-### 为什么
+每次重要修改都应说明：目标失败、拟议变更、预期收益、预期成本、更新哪些 eval、回滚条件。
 
-环境会变化。好行为也会退化。
+## 总表
 
-### 实践
-
-每次重要 skill 改动都应包含：
-
-- target failure；
-- proposed change；
-- expected benefit；
-- expected cost；
-- evals updated；
-- rollback condition。
+| 定律 | 主要目标 |
+|---|---|
+| 触发边界 | 错误激活 |
+| 任务编译 | 误解用户意图 |
+| 上下文经济 | 上下文膨胀 |
+| 证据外部化 | 过期或想象事实 |
+| 轨迹约束 | 看似合理的坏路径 |
+| 自由度风险 | 风险与自由度错配 |
+| 确定性外包 | 脆弱的自由文本执行 |
+| 完成证明 | 完成幻觉 |
+| 漂移回归 | 长期衰减 |

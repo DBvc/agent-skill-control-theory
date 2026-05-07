@@ -1,41 +1,43 @@
 # Contributing
 
-This repository is a theory and design toolkit for LLM agent skills.
+ASCT is a theory repository. Contributions should preserve conceptual clarity.
 
 ## Contribution principles
 
-1. Keep the core theory stable.
-2. Prefer mapping new examples to existing control surfaces before adding new concepts.
-3. Separate dated case studies from core theory.
-4. Do not add repository rankings to core docs.
-5. Do not add unverified claims about specific products or repositories.
-6. Keep English as the primary language and update the Chinese version when changing core docs.
-7. Treat safety as a hard constraint, not a footnote.
+1. Do not add a new primitive when an existing postulate, control surface, or design law explains the case.
+2. Distinguish theory from implementation mechanism.
+3. Prefer examples that clarify the theory without tying it to a stale external repository state.
+4. Use dated case studies if discussing public repositories.
+5. Add eval or review templates when proposing a new operational practice.
+6. Keep English as the primary version and maintain the Chinese mirror for major documents.
 
-## Change process
+## Theory change checklist
 
-For theory changes, include:
+Before changing core theory, answer:
 
-- what concept changed;
-- why existing concepts were insufficient;
-- what examples or failures motivated the change;
-- what docs/templates/examples must be updated.
+- Which postulate, control surface, or law is insufficient?
+- What case cannot be explained by the current theory?
+- Is this a new primitive or a host-specific implementation mechanism?
+- What existing docs and templates need to change?
+- What examples or evals demonstrate the change?
 
-For template changes, include:
+## Documentation style
 
-- which control surface is improved;
-- what new cost or friction is introduced;
-- how the change should be evaluated.
+Write in a rigorous but readable style.
 
-## Case studies
+Prefer:
 
-Add case studies only under `case-studies/` and include:
+- definitions before claims;
+- claims before examples;
+- examples before templates;
+- explicit trade-offs;
+- concrete failure modes;
+- careful scope boundaries.
 
-- observation date;
-- repository URL;
-- commit or tag if available;
-- scope of analysis;
-- ASCT control-surface mapping;
-- what the case study teaches.
+Avoid:
 
-Do not put repository-specific judgments into the core theory docs.
+- vague praise;
+- repository ranking in core docs;
+- treating anecdote as law;
+- adding rules without cost analysis;
+- overloading `SKILL.md` with theory.

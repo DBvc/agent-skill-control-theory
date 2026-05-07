@@ -1,125 +1,153 @@
 ---
 name: frontend-debug
-description: Diagnose and fix active frontend bugs, regressions, rendering issues, flaky UI behavior, or broken user interactions. Use when the user reports something is currently broken, failing, visually regressed, flaky, or inconsistent in a web UI. Not for general code review, new feature design, subjective visual taste, or writing PR descriptions.
+description: Use when diagnosing an actively broken frontend behavior, regression, rendering bug, flaky UI interaction, or state/timing problem. Not for reviewing a completed diff, designing new UI, writing commit messages, or subjective visual taste critique without broken behavior.
 ---
 
 # Frontend Debug
 
-Use this skill to diagnose active frontend failures and produce a minimal, verified fix.
+Use this skill to diagnose and fix active frontend failures with evidence, feedback loops, and completion proof.
 
-The goal is not to make broad improvements. The goal is to establish a reliable feedback loop, identify a falsifiable root cause, make the smallest sufficient change, and verify the result.
+This is a synthetic example built with Agent Skill Control Theory. It is intentionally not tied to any specific framework.
+
+## Purpose
+
+The goal is to move from observed broken behavior to a verified fix.
+
+The goal is not to redesign the feature, review unrelated code, or make broad quality improvements.
 
 ## Mode selection
 
-Choose the smallest sufficient mode:
+Choose the smallest sufficient mode.
 
-- `quick`: obvious local bug, existing failing test or clear reproduction.
-- `standard`: normal broken UI behavior, regression, or rendering issue.
-- `deep`: flaky behavior, race condition, cross-browser issue, hydration issue, release-critical bug, or repeated failed fix.
-- `clarification`: the symptom or reproduction is missing.
-- `safety_redirect`: user asks for unsafe, deceptive, or unauthorized behavior.
+- `quick`: small, reproducible bug with obvious scope.
+- `standard`: normal runtime, rendering, state, or interaction bug.
+- `deep`: flaky behavior, cross-browser issue, production regression, data loss, security-sensitive UI, or repeated failed attempts.
+- `clarification`: required reproduction details or access are missing.
+- `safety_redirect`: the request asks for unsafe, deceptive, or unauthorized behavior.
 
 ## Required inputs
 
-Before changing code, identify:
+Identify:
 
-- symptom;
-- reproduction path;
+- observed symptom;
 - expected behavior;
-- actual behavior;
-- affected route/component/browser/device when available;
-- whether this is a regression;
-- available validation command or UI check.
+- reproduction path or missing reproduction information;
+- environment if relevant;
+- current files, diff, logs, test output, or screenshots available;
+- validation commands available in the repository.
 
-If the reproduction is missing, ask for it or construct the smallest observable feedback loop from available evidence.
+If the reproduction path is missing but can be discovered by inspecting tests, routes, stories, logs, or code, inspect before asking the user.
 
 ## Hard gates
 
-Do not edit production code until you have at least one pass/fail feedback signal:
+Do not edit code until one of these exists:
 
-- failing test;
-- browser reproduction;
-- console/log assertion;
-- screenshot comparison;
-- CLI or API fixture;
-- minimal reproduction script;
-- user-confirmed reproduction steps.
+- a reproducible pass/fail signal;
+- a failing test;
+- a browser or interaction script;
+- a minimal manual reproduction path;
+- a clear log or trace that maps to the symptom.
 
-Do not claim root cause unless the hypothesis explains all observed symptoms.
+Do not propose a fix until you can state a falsifiable root-cause hypothesis.
 
-Do not claim success unless validation was run or the limitation is explicitly stated.
+Do not claim success unless validation evidence supports the claim.
 
 ## Workflow
 
-1. **Classify the failure**
-   - runtime error;
-   - state/data bug;
-   - rendering/layout bug;
-   - interaction bug;
-   - hydration or server/client mismatch;
-   - async/race/flaky behavior;
-   - environment/config issue.
+1. **Symptom inventory**
+   - Restate the observed behavior and expected behavior.
+   - List all known symptoms.
+   - Note uncertainty and missing inputs.
 
-2. **Establish feedback**
-   - Prefer existing test or reproduction.
-   - If absent, create the smallest temporary harness or manual browser check.
-   - Write down what signal means fail and what signal means pass.
+2. **Feedback loop**
+   - Establish the fastest reliable pass/fail signal.
+   - Prefer existing test commands, focused tests, Playwright or browser checks, storybook states, curl/API fixtures, or small reproduction scripts.
+   - If no automated loop is available, document the manual reproduction path.
 
-3. **Gather current evidence**
-   - Inspect relevant files, not remembered paths.
-   - Read recent diff if this is a regression.
-   - Check logs, console output, failing assertions, screenshots, or DOM evidence.
-   - Separate observed facts from assumptions.
+3. **State grounding**
+   - Inspect current files, diff, logs, tests, screenshots, and config.
+   - Do not rely on framework or package behavior from memory when local evidence or docs are available.
 
-4. **Form hypotheses**
-   - Generate 2-4 ranked hypotheses.
-   - Each hypothesis must predict an observable result.
-   - Probe one variable at a time.
+4. **Hypothesis**
+   - Generate one to three ranked hypotheses.
+   - Each hypothesis must explain all known symptoms.
+   - Each hypothesis must be falsifiable by a probe.
 
-5. **Fix minimally**
-   - Change the smallest surface that explains the root cause.
-   - Avoid broad rewrites, unrelated cleanup, or style drift.
-   - Prefer preserving public interfaces unless the interface itself is the cause.
+5. **Probe**
+   - Test one variable at a time.
+   - Prefer evidence-producing probes over broad edits.
+   - If a hypothesis fails, record why.
 
-6. **Validate**
+6. **Fix**
+   - Make the smallest fix that addresses the root cause.
+   - Avoid unrelated refactors.
+   - Add or update regression coverage when there is a correct seam.
+
+7. **Validate**
    - Run the feedback loop again.
-   - Run relevant existing tests or build checks when available.
-   - For visual bugs, check at least the affected viewport and one narrow mobile viewport when feasible.
+   - Run relevant repository validation when practical.
+   - If validation cannot run, state why.
 
-7. **Stop or hand off**
-   - If the same symptom remains after a fix, stop and re-evaluate the hypothesis.
-   - After three failed hypotheses, stop and produce a handoff instead of stacking patches.
+8. **Handoff or completion**
+   - If fixed and validated, provide completion proof.
+   - If not fixed after three failed hypotheses, stop and provide handoff.
+
+## Stop conditions
+
+Stop and hand off when:
+
+- three root-cause hypotheses fail;
+- required environment access is unavailable;
+- validation cannot be established;
+- the fix requires product or design judgment outside the bug;
+- external credentials or production access are required;
+- continuing would likely cause unrelated changes.
 
 ## Evidence policy
 
-Use this source hierarchy:
+Use this source hierarchy unless the task suggests otherwise:
 
-1. direct tool output, failing tests, browser reproduction;
-2. current files and diffs;
-3. logs, screenshots, DOM evidence;
-4. official framework docs;
-5. user statements;
-6. inference.
+```text
+focused reproduction or failing test
+> current logs and browser evidence
+> current files and diff
+> repository config and validation commands
+> official docs or installed package types
+> user statement
+> inference
+```
 
-Do not rely on memory for file paths, framework behavior, package versions, or project conventions when they can be inspected.
+Separate facts, assumptions, and judgments.
 
 ## Output contract
 
-Return:
+Final output must include:
 
-- **Symptom**: what was broken.
-- **Feedback loop**: how failure/pass was observed.
-- **Root cause**: one falsifiable explanation.
-- **Fix**: what changed and why.
-- **Validation**: commands or browser checks run, with results.
-- **Unverified**: anything not checked.
-- **Remaining risk**: if any.
+- Symptom:
+- Root cause:
+- Evidence:
+- Fix:
+- Validation:
+- Not validated:
+- Remaining risk:
 
-For handoff, return:
+For handoff, include:
 
-- observed facts;
-- hypotheses tried;
-- probes and results;
-- files inspected;
-- likely next probe;
-- why continuing would risk patch stacking.
+- Known symptoms:
+- Feedback loop attempted:
+- Hypotheses tested:
+- Evidence collected:
+- Current best hypothesis:
+- Blocker:
+- Recommended next probe:
+
+## Common failure modes to avoid
+
+Avoid:
+
+- patching symptoms before root cause;
+- changing unrelated files;
+- relying on framework behavior from memory when local evidence exists;
+- treating subjective visual taste as a bug;
+- declaring success without rerunning the pass/fail signal;
+- continuing indefinitely after failed hypotheses.

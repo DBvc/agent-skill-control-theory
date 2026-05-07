@@ -1,0 +1,108 @@
+# Agent 技能控制论 - Collection IR
+# 构建或重构 skill 仓库前使用。
+
+identity:
+  name: ""
+  one_sentence: ""
+  owner: ""
+  intended_users:
+    - "individual"
+    - "team"
+    - "organization"
+    - "public"
+  intended_hosts:
+    - "Claude Code"
+    - "Codex"
+    - "Other"
+
+collection_purpose:
+  task_domains:
+    - ""
+  non_goals:
+    - ""
+  expected_install_scope: "user | repo | organization | subset-only"
+
+skills:
+  - name: ""
+    purpose: ""
+    maturity: "draft | experimental | usable | production | deprecated"
+    primary_control_surfaces:
+      - "activation"
+    safety_tier: "low | medium | high"
+    dependencies:
+      - ""
+
+skill_graph:
+  relationships:
+    - from: ""
+      to: ""
+      type: "precedes | requires | competes | fallback | handoff"
+      rule: ""
+  conflict_rules:
+    - ""
+  priority_rules:
+    - ""
+  handoff_contracts:
+    - ""
+
+discovery:
+  human_catalog:
+    readme: true
+    marketplace_metadata: false
+  agent_catalog:
+    generated_index: ""
+    llms_txt: ""
+    resolver: ""
+  description_policy: ""
+
+host_artifacts:
+  commands:
+    - name: ""
+      purpose: ""
+  hooks:
+    - name: ""
+      lifecycle_event: ""
+      purpose: ""
+  statusline: ""
+  repo_instructions:
+    - ""
+  generated_indexes:
+    - ""
+
+shared_resources:
+  references:
+    - ""
+  scripts:
+    - ""
+  assets:
+    - ""
+  project_memory:
+    - ""
+
+safety:
+  install_policy: ""
+  provenance_policy: ""
+  script_audit_policy: ""
+  network_policy: ""
+  credential_policy: ""
+  external_action_policy: ""
+  dependency_policy: ""
+  untrusted_input_policy: ""
+
+evaluation:
+  collection_trigger_evals:
+    - ""
+  routing_evals:
+    - ""
+  cross_skill_handoff_evals:
+    - ""
+  safety_evals:
+    - ""
+  regression_suite: ""
+
+evolution:
+  release_process: ""
+  deprecation_policy: ""
+  compatibility_policy: ""
+  review_cadence: ""
+  changelog_policy: ""

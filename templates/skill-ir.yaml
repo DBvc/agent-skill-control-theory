@@ -1,6 +1,6 @@
 # Agent Skill Control Theory - Skill IR
 # Use this internal representation before writing SKILL.md.
-# 中文提示：这是写 SKILL.md 前的内部设计稿，不是最终输出格式。
+# This file is a design worksheet, not a runtime skill file.
 
 identity:
   name: ""
@@ -10,20 +10,28 @@ identity:
     - "Claude Code"
     - "Codex"
     - "Other"
-
-status:
-  maturity: "draft | experimental | usable | production | deprecated"
   owner: ""
-  last_reviewed: ""
+  status:
+    maturity: "draft | experimental | usable | production | deprecated"
+    last_reviewed: ""
 
 worthiness:
   task_distribution: ""
-  repetition: "low | medium | high"
+  repeated_context: ""
   stable_job_to_be_done: ""
   evaluability: "low | medium | high"
   domain_substance: "low | medium | high"
+  expected_frequency: "low | medium | high"
+  failure_cost: "low | medium | high"
   safety_budget: "low | medium | high"
-  verdict: "create | checklist | direct-answer | reject"
+  verdict: "create | checklist | direct-answer | global-instruction | command | hook | script | reference | reject"
+
+placement:
+  selected: "skill | global_instruction | command | hook | script | reference | asset | repo_memory | collection_routing"
+  rationale: ""
+  rejected_alternatives:
+    - placement: ""
+      reason: ""
 
 failure_map:
   activation_failures:
@@ -40,31 +48,34 @@ failure_map:
     - ""
   evolution_failures:
     - ""
+  safety_failures:
+    - ""
 
 control_surfaces:
   activation:
     required: true
-    mechanism: "description, not-for, near-miss evals"
+    mechanism: "description, explicit invocation, not-for, near-miss evals"
   intent:
     required: false
-    mechanism: "mode routing, clarification gates"
+    mechanism: "mode routing, clarification gates, task frame selection"
   state:
     required: false
-    mechanism: "source hierarchy, repo/docs/tool evidence"
+    mechanism: "source hierarchy, repo/docs/tool evidence, project memory"
   trajectory:
     required: false
-    mechanism: "workflow, hard gates, stop conditions"
+    mechanism: "workflow, hard gates, stop conditions, fallback, handoff"
   execution:
     required: false
-    mechanism: "scripts, validators, dry-runs"
+    mechanism: "scripts, validators, renderers, dry-runs"
   completion:
     required: false
     mechanism: "validation, proof fields, limitations"
   evolution:
     required: false
-    mechanism: "trigger/output/safety evals, patch hypotheses"
+    mechanism: "trigger/output/process/safety evals, patch hypotheses"
 
 activation_contract:
+  description_draft: ""
   use_when:
     - ""
   implicit_triggers:
@@ -72,10 +83,14 @@ activation_contract:
   not_for:
     - ""
   near_miss:
-    - ""
+    - prompt: ""
+      expected: "do_not_activate"
+      prefer: ""
   adjacent_skills:
     - name: ""
       prefer_when: ""
+  explicit_invocations:
+    - ""
 
 runtime_contract:
   modes:
@@ -91,6 +106,8 @@ runtime_contract:
       use_when: ""
   required_inputs:
     - ""
+  non_goals:
+    - ""
   hard_gates:
     - ""
   stop_conditions:
@@ -99,6 +116,7 @@ runtime_contract:
     - ""
   fallback_paths:
     - ""
+  handoff_contract: ""
 
 state_policy:
   source_of_truth:
@@ -107,10 +125,16 @@ state_policy:
     - "direct tool output"
     - "current files or diff"
     - "official docs"
+    - "rendered artifacts"
     - "user statement"
     - "inference"
   freshness_policy: ""
   uncertainty_policy: ""
+  project_memory:
+    read:
+      - ""
+    update_when:
+      - ""
 
 execution_policy:
   scripts_needed:
@@ -118,10 +142,19 @@ execution_policy:
       purpose: ""
       input: ""
       output: ""
+      failure_behavior: ""
   external_actions:
     allowed: false
     approval_required: true
     dry_run_required: true
+    audit_required: true
+  tools:
+    required:
+      - ""
+    optional:
+      - ""
+  dependencies:
+    - ""
 
 completion_contract:
   final_output_fields:
@@ -129,9 +162,38 @@ completion_contract:
     - "evidence"
     - "validation"
     - "known limitations"
+    - "remaining risks"
   proof_required:
     - ""
   unsupported_claims_forbidden:
+    - ""
+  confidence_policy: ""
+
+host_specific_artifacts:
+  commands:
+    - name: ""
+      purpose: ""
+  hooks:
+    - name: ""
+      lifecycle_event: ""
+      purpose: ""
+  statusline: ""
+  repo_instructions:
+    - "AGENTS.md"
+    - "CLAUDE.md"
+  generated_indexes:
+    - ""
+
+composition:
+  adjacent_skills:
+    - name: ""
+      relationship: "competes | precedes | follows | fallback | handoff"
+      rule: ""
+  required_skills:
+    - ""
+  conflict_rules:
+    - ""
+  handoff_contracts:
     - ""
 
 resources:
@@ -144,8 +206,45 @@ resources:
   assets:
     - path: "assets/example"
       use_when: ""
+  evals:
+    - path: "evals/triggers.json"
+      purpose: ""
+
+objective:
+  primary_success_metric: ""
+  secondary_success_metrics:
+    - ""
+  human_learning_goal: ""
+  future_task_cost_reduction: ""
+
+cost_model:
+  context: "low | medium | high"
+  user_friction: "low | medium | high"
+  tool_runtime: "low | medium | high"
+  monetary: "low | medium | high"
+  audit: "low | medium | high"
+  maintenance: "low | medium | high"
+
+risk_model:
+  wrong_trigger: "low | medium | high"
+  privacy: "low | medium | high"
+  security: "low | medium | high"
+  external_side_effects: "low | medium | high"
+  over_control: "low | medium | high"
+  under_control: "low | medium | high"
+  drift: "low | medium | high"
+
+safety:
+  credentials: ""
+  network: ""
+  filesystem: ""
+  external_actions: ""
+  untrusted_inputs: ""
+  install_scope: ""
+  safety_budget_check: "pass | fail | unknown"
 
 eval_plan:
+  baseline_comparison: "none | old-skill | no-skill | both"
   trigger_cases:
     positive:
       - ""
@@ -153,6 +252,8 @@ eval_plan:
       - ""
     near_miss:
       - ""
+  process_assertions:
+    - ""
   output_cases:
     happy_path:
       - ""
@@ -162,7 +263,8 @@ eval_plan:
       - ""
   safety_cases:
     - ""
-  baseline_comparison: "none | old-skill | no-skill | both"
+  cost_metrics:
+    - ""
 
 patch_hypothesis:
   target_failure: ""

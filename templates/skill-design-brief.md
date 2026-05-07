@@ -1,119 +1,169 @@
 # Skill Design Brief
 
-Use this before writing or changing a skill.
-
 ## 1. Scenario
 
-**Skill name:**
+Name:
 
-**One-sentence purpose:**
+Task distribution:
 
-**Task distribution:**
+Repeated context:
 
-**Common user phrases:**
+Stable job-to-be-done:
 
-**Expected output:**
+Expected users:
 
-**Non-goals:**
+Expected host environments:
 
-## 2. Worthiness
+## 2. Worthiness gates
 
-| Gate | Answer |
-|---|---|
-| Repeats often enough? | |
-| Stable job-to-be-done? | |
-| Evaluatable? | |
-| Non-trivial domain content? | |
-| Safety boundary clear? | |
+| Gate | Pass? | Notes |
+|---|---|---|
+| Repeated task |  |  |
+| Stable job |  |  |
+| Evaluability |  |  |
+| Domain substance |  |  |
+| Safety budget |  |  |
+| Maintenance owner |  |  |
 
-**Verdict:** create / checklist / direct answer / reject
+Verdict:
+
+```text
+create | checklist | direct-answer | global-instruction | command | hook | script | reference | reject
+```
 
 ## 3. Failure map
 
-What happens without this skill?
+Base-agent failures:
 
-| Failure category | Likely failures |
-|---|---|
-| Activation | |
-| Intent | |
-| State | |
-| Trajectory | |
-| Execution | |
-| Completion | |
-| Evolution | |
+- Activation:
+- Intent:
+- State:
+- Trajectory:
+- Execution:
+- Completion:
+- Evolution:
+- Safety:
 
 ## 4. Control surfaces
 
-Which control surfaces are required?
+Which surfaces are required?
 
-- [ ] Activation Control
-- [ ] Intent Control
-- [ ] State Control
-- [ ] Trajectory Control
-- [ ] Execution Control
-- [ ] Completion Control
-- [ ] Evolution Control
+- [ ] Activation
+- [ ] Intent
+- [ ] State
+- [ ] Trajectory
+- [ ] Execution
+- [ ] Completion
+- [ ] Evolution
 
-## 5. Activation contract
+Why these surfaces?
 
-**Use when:**
+```text
 
-**Not for:**
+```
 
-**Near-miss cases:**
+## 5. Placement decision
 
-**Adjacent skills:**
+Where should the control live?
 
-## 6. Runtime contract
+```text
 
-**Modes:**
+```
 
-**Required inputs:**
+Why not elsewhere?
 
-**Hard gates:**
+```text
 
-**Workflow:**
+```
 
-**Stop conditions:**
+## 6. Activation contract
 
-**Fallback paths:**
+Use when:
 
-## 7. Evidence policy
+- 
 
-**Source of truth:**
+Not for:
 
-**Source hierarchy:**
+- 
 
-**What must be verified before final claims:**
+Near-miss cases:
 
-## 8. Execution policy
+- 
 
-**Scripts needed:**
+Adjacent skills:
 
-**External actions:**
+- 
 
-**Approval/dry-run requirements:**
+## 7. Runtime contract
 
-## 9. Completion contract
+Modes:
+
+- quick:
+- standard:
+- deep:
+- clarification:
+- safety_redirect:
+
+Hard gates:
+
+- 
+
+Workflow:
+
+1. 
+2. 
+3. 
+
+Stop conditions:
+
+- 
+
+Handoff format:
+
+```text
+
+```
+
+## 8. Evidence and execution
+
+Source of truth:
+
+- 
+
+Source hierarchy:
+
+```text
+
+```
+
+Scripts or tools needed:
+
+- 
+
+## 9. Completion proof
 
 Final output must include:
 
-- [ ] Summary
-- [ ] Evidence
-- [ ] Validation
-- [ ] Known limitations
-- [ ] Remaining risks
+- 
+
+Unsupported claims forbidden:
+
+- 
+
+Validation required:
+
+- 
 
 ## 10. Eval plan
 
-**Positive trigger cases:**
+Baseline:
 
-**Negative trigger cases:**
+Trigger evals:
 
-**Near-miss trigger cases:**
+Output evals:
 
-**Output eval cases:**
+Process evals:
 
-**Safety eval cases:**
+Safety evals:
 
-**Historical regression cases:**
+Regression cases:

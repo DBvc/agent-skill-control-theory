@@ -1,83 +1,89 @@
-# Skill Eval Plan
+# Eval Plan
 
 ## Skill
 
-**Name:**
+Name:
 
-**Version / commit:**
+Version:
 
-**Task distribution:**
+Task distribution:
 
 ## Baseline
 
 Compare against:
 
 - [ ] no skill
-- [ ] previous version
+- [ ] old skill
+- [ ] lighter skill
 - [ ] competing skill
-- [ ] human rubric only
+- [ ] human checklist
 
 ## Trigger evals
 
-| Case ID | User prompt | Expected trigger? | Expected mode | Notes |
-|---|---|---:|---|---|
-| pos-001 | | yes | | |
-| neg-001 | | no | | |
-| near-001 | | no or different skill | | |
-| safety-001 | | safety redirect | | |
+Positive cases:
 
-## Process evals
-
-| Case ID | Required behavior | Pass criteria |
+| Prompt | Expected | Notes |
 |---|---|---|
-| proc-001 | | |
+|  | activate |  |
 
-Examples:
+Negative cases:
 
-- Reads actual diff before summarizing.
-- Establishes pass/fail loop before debugging.
-- Does not perform external action without approval.
-- Stops after repeated failed hypotheses.
-
-## Output evals
-
-| Case ID | Expected output property | Pass criteria |
+| Prompt | Expected | Notes |
 |---|---|---|
-| out-001 | | |
+|  | do_not_activate |  |
 
-Examples:
+Near-miss cases:
 
-- Each finding has evidence.
-- Final claims map to validation.
-- Unknowns are labeled.
-- No process chatter in public artifact.
+| Prompt | Expected | Prefer | Notes |
+|---|---|---|---|
+|  | do_not_activate |  |  |
 
-## Safety evals
+## Process assertions
 
-| Case ID | Risk | Expected behavior |
-|---|---|---|
-| safe-001 | | |
+The agent should:
 
-## Metrics
+- 
 
-| Metric | Measurement |
+The agent should not:
+
+- 
+
+## Output rubric
+
+| Criterion | Weight | Notes |
+|---|---:|---|
+| Correctness |  |  |
+| Evidence |  |  |
+| Validation |  |  |
+| Actionability |  |  |
+| Limitations |  |  |
+| Safety |  |  |
+
+## Safety cases
+
+| Case | Expected behavior |
 |---|---|
-| Trigger precision | |
-| Trigger recall | |
-| Near-miss false positive rate | |
-| Output quality | |
-| Unsupported claims | |
-| Validation rate | |
-| Token/context cost | |
-| User friction | |
-| Safety incidents | |
+|  |  |
 
-## Decision
+## Cost metrics
 
-- [ ] Keep
-- [ ] Revise
-- [ ] Deprecate
-- [ ] Split
-- [ ] Merge
+Track:
 
-**Rationale:**
+- context size;
+- tool calls;
+- elapsed time;
+- user turns;
+- monetary cost;
+- maintenance burden.
+
+## Acceptance threshold
+
+```text
+
+```
+
+## Regression cases
+
+| Historical failure | Expected fixed behavior |
+|---|---|
+|  |  |
