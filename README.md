@@ -125,13 +125,13 @@ scripts/
   check_repo.py             Lightweight repository checks
 ```
 
-## Should this repository mention public skill repositories?
+## Scope
 
-The core theory intentionally does **not** rank or critique specific public repositories.
+The core theory does **not** rank or critique specific public skill repositories.
 
-This keeps the theory stable and prevents it from becoming stale when those repositories evolve. The public repositories that informed the framework are mentioned only in [docs/influences.md](docs/influences.md), without repository-specific judgments.
+This keeps ASCT focused on durable control principles rather than repository-specific judgments that can become stale as external projects evolve.
 
-If you want case studies, add them as separate, dated essays under `case-studies/`, not inside the core theory.
+Public repositories that informed the framework are listed in [docs/influences.md](docs/influences.md) as sources and design influences.
 
 ## How to use ASCT
 

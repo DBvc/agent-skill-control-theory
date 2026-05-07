@@ -10,7 +10,7 @@ It is a working theory built from:
 4. Public skill repositories and real skill-authoring patterns.
 5. General observations about LLM agents, tool use, bounded context, hallucination, evaluation, and software engineering workflows.
 
-## Why there are no repository rankings here
+## Scope of sources
 
 This repository intentionally avoids ranking or critiquing specific public skill repositories in the core theory.
 
@@ -21,14 +21,6 @@ Reasons:
 - This project is meant to be a theory and design toolkit, not a review archive.
 - The same repository can improve, pivot, or reorganize after this theory is published.
 
-If case studies are added, they should be:
-
-- dated;
-- separated from core theory;
-- scoped to one question;
-- explicit about what version or commit was observed;
-- treated as examples, not permanent judgments.
-
 ## Public sources worth reading
 
 - Agent Skills specification: https://agentskills.io/specification
@@ -37,39 +29,3 @@ If case studies are added, they should be:
 - Claude Agent Skills docs: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
 - OpenAI skills repository: https://github.com/openai/skills
 - Anthropic skills repository: https://github.com/anthropics/skills
-
-## Suggested case-study policy
-
-If you want to analyze a repository, create a dated file:
-
-```text
-case-studies/2026-05-06-repo-name.md
-```
-
-Use this structure:
-
-```markdown
-# Repository case study: <repo>
-
-Observed at: <date>
-Commit or tag: <commit/tag if available>
-Question: <what this case study tests>
-
-## ASCT mapping
-
-- Activation Control:
-- Intent Control:
-- State Control:
-- Trajectory Control:
-- Execution Control:
-- Completion Control:
-- Evolution Control:
-
-## What the repository teaches
-
-## What appears missing
-
-## What changed in the theory, if anything
-```
-
-Most case studies should not change ASCT’s core theory. They should map new examples to existing control surfaces unless they reveal a new class of failure that ASCT cannot explain.
