@@ -16,6 +16,8 @@ It changes an agent's action distribution by adding instructions, external conte
 deterministic executors, reusable materials, and validation rules.
 ```
 
+ASCT is an engineering framework for designing reliable, testable, and maintainable LLM agent skills.
+
 Chinese version: [README.zh-CN.md](README.zh-CN.md).
 
 ## Status
